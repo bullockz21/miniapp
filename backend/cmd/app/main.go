@@ -3,11 +3,17 @@ package main
 import (
 	"miniapp/internal/middleware"
 	handlers "miniapp/internal/presentation/http"
-	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	http.HandleFunc("/", middleware.MiddlewareTest(handlers.HandlerTest))
+	r := gin.Default()
 
-	http.ListenAndServe(":8080", nil)
+	r.Use(middleware.MiddlewareTest())
+
+	r.GET("/", handlers.GetHandlerTest)
+	r.POST("/", handlers.PostHandlerTest)
+
+	r.Run(":8080")
 }

@@ -26,6 +26,20 @@ func (u User) GetUserAddress(n int) string {
 	return u.UserAddress[n]
 }
 
+// Setters
+
+func (u *User) SetUserId(id int) {
+	u.UserId = id
+}
+
+func (u *User) SetUserTgId(id string) {
+	u.UserTgId = id
+}
+
+func (u *User) SetUserName(name string) {
+	u.UserName = name
+}
+
 func (u *User) AddUserAddress(address string) {
 	u.UserAddress = append(u.UserAddress, address)
 }

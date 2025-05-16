@@ -2,12 +2,17 @@ package middleware
 
 import (
 	"log"
-	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func MiddlewareTest(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Middleware")
-		next(w, r)
+func MiddlewareTest() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.Println("Hello from middleware")
+		c.Next()
 	}
+}
+
+func AuthMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {}
 }

@@ -5,6 +5,7 @@ func NewOrder() Order {
 }
 
 // Getters
+
 func (o Order) GetOrderId() int {
 	return o.OrderId
 }
@@ -25,6 +26,24 @@ func (o Order) GetOrderAddress() string {
 	return o.OrderAddress
 }
 
-func (o *Order) SetOrderId(address string) {
-	o.OrderAddress = address
+// Setters
+
+func (o *Order) SetOrderId(id int) {
+	o.OrderId = id
+}
+
+func (o *Order) SetOrderUserId(id int) {
+	o.OrderUserId = id
+}
+
+func (o *Order) SetOrderMenuId(id int) {
+	o.OrderMenuId = id
+}
+
+func (o *Order) SetOrderStatus(stat int) {
+	o.OrderStatus = stat
+}
+
+func (o *Order) SetOrderAddress(addr string) {
+	o.OrderAddress = addr
 }
