@@ -1,10 +1,10 @@
 package dto
 
-type UserDTO struct {
-	UserId      int      `json:"user_id"`
-	UserTgId    string   `json:"user_telegram_id"`
-	UserName    string   `json:"user_name"`
-	UserAddress []string `json:"user_address"`
+type CustomerDTO struct {
+	CustomerId      int      `json:"customer_id"`
+	CustomerTgId    string   `json:"customer_telegram_id"`
+	CustomerName    string   `json:"customer_name"`
+	CustomerAddress []string `json:"customer_address"`
 }
 
 type MenuDTO struct {
@@ -16,7 +16,7 @@ type MenuDTO struct {
 
 type OrderDTO struct {
 	OrderId     int    `json:"order_id"`
-	UserId      int    `json:"user_id"`
+	CustomerId  int    `json:"customer_id"`
 	MenuId      int    `json:"menu_id"`
 	OrderStatus int    `json:"order_status"`
 	Address     string `json:"address"`

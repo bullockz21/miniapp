@@ -10,8 +10,8 @@ func (o Order) GetOrderId() int {
 	return o.OrderId
 }
 
-func (o Order) GetOrderUserId() int {
-	return o.OrderUserId
+func (o Order) GetOrderCustomerId() int {
+	return o.OrderCustomerId
 }
 
 func (o Order) GetOrderMenuId() int {
@@ -32,8 +32,8 @@ func (o *Order) SetOrderId(id int) {
 	o.OrderId = id
 }
 
-func (o *Order) SetOrderUserId(id int) {
-	o.OrderUserId = id
+func (o *Order) SetOrderCustomerId(id int) {
+	o.OrderCustomerId = id
 }
 
 func (o *Order) SetOrderMenuId(id int) {

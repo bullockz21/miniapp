@@ -1,8 +1,12 @@
 # Структура проекта
 
+## COMMAND
+* go install github.com/pressly/goose/v3/cmd/goose@latest
+* goose -dir migrations postgres "postgresql://postgres:*password*@127.0.0.1:5432/postgres?sslmode=disable" up
+
 ## Пакеты
 * github.com/gin-gonic/gin
-* github.com/dgrijalva/jwt-go ???
+* github.com/golang-jwt/jwt/v5
 
 ## Структура папок
 * /cmd
@@ -31,7 +35,7 @@
 				* model.go
 			* /order
 				* model.go
-			* /user
+			* /customer
 				* model.go
 	* /dto
 		* dto_models.go
@@ -63,7 +67,7 @@
 		* /service/service.go — бизнес логика, сервисы приложения.
 	* /domain
 		* /modules
-			* /menu, /order, /user — различные доменные модули. В каждой из них определена своя модель, описывающая сущности предметной области.
+			* /menu, /order, /customer — различные доменные модули. В каждой из них определена своя модель, описывающая сущности предметной области.
 	* /dto
 		* dto_models.go — структуры для передачи данных (Data Transfer Objects);
 		* dto_mappers.go — функции для преобразования моделей в DTO и наоборот.

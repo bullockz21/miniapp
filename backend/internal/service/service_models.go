@@ -1,6 +1,6 @@
 package service
 
-type UserService interface {
+type CustomerService interface {
 }
 
 type MenuService interface {

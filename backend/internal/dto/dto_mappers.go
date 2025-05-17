@@ -1,19 +1,19 @@
 package dto
 
 import (
+	modules_customer "miniapp/internal/domain/customer"
 	modules_menu "miniapp/internal/domain/menu"
 	modules_order "miniapp/internal/domain/order"
-	modules_user "miniapp/internal/domain/user"
 )
 
 // Mapping to DTO structure
 
-func FromUserToDTO(u modules_user.User) UserDTO {
-	return UserDTO{
-		UserId:      u.UserId,
-		UserTgId:    u.UserTgId,
-		UserName:    u.UserName,
-		UserAddress: u.UserAddress,
+func FromCustomerToDTO(u modules_customer.Customer) CustomerDTO {
+	return CustomerDTO{
+		CustomerId:      u.CustomerId,
+		CustomerTgId:    u.CustomerTgId,
+		CustomerName:    u.CustomerName,
+		CustomerAddress: u.CustomerAddress,
 	}
 }
 
@@ -29,7 +29,7 @@ func FromMenuToDTO(m modules_menu.Menu) MenuDTO {
 func FromOrderToDTO(o modules_order.Order) OrderDTO {
 	return OrderDTO{
 		OrderId:     o.OrderId,
-		UserId:      o.OrderUserId,
+		CustomerId:  o.OrderCustomerId,
 		MenuId:      o.OrderMenuId,
 		OrderStatus: o.OrderStatus,
 		Address:     o.OrderAddress,
@@ -38,12 +38,12 @@ func FromOrderToDTO(o modules_order.Order) OrderDTO {
 
 // Mapping from DTO structure
 
-func FromDTOToUser(u UserDTO) modules_user.User {
-	return modules_user.User{
-		UserId:      u.UserId,
-		UserTgId:    u.UserTgId,
-		UserName:    u.UserName,
-		UserAddress: u.UserAddress,
+func FromDTOToCustomer(u CustomerDTO) modules_customer.Customer {
+	return modules_customer.Customer{
+		CustomerId:      u.CustomerId,
+		CustomerTgId:    u.CustomerTgId,
+		CustomerName:    u.CustomerName,
+		CustomerAddress: u.CustomerAddress,
 	}
 }
 
@@ -58,10 +58,10 @@ func FromDTOToMenu(m MenuDTO) modules_menu.Menu {
 
 func FromDTOToOrder(o OrderDTO) modules_order.Order {
 	return modules_order.Order{
-		OrderId:      o.OrderId,
-		OrderUserId:  o.UserId,
-		OrderMenuId:  o.MenuId,
-		OrderStatus:  o.OrderStatus,
-		OrderAddress: o.Address,
+		OrderId:         o.OrderId,
+		OrderCustomerId: o.CustomerId,
+		OrderMenuId:     o.MenuId,
+		OrderStatus:     o.OrderStatus,
+		OrderAddress:    o.Address,
 	}
 }

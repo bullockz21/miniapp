@@ -1,8 +1,8 @@
 package main
 
 import (
-	"miniapp/internal/middleware"
-	handlers "miniapp/internal/presentation/http"
+	handlers "miniapp/internal/handlers/http"
+	"miniapp/internal/handlers/middleware"
 
 	"github.com/gin-gonic/gin"
 )
