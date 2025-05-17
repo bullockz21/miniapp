@@ -1,9 +1,9 @@
 package dto
 
 import (
-	modules_menu "miniapp/internal/domain/modules/menu"
-	modules_order "miniapp/internal/domain/modules/order"
-	modules_user "miniapp/internal/domain/modules/user"
+	modules_menu "miniapp/internal/domain/menu"
+	modules_order "miniapp/internal/domain/order"
+	modules_user "miniapp/internal/domain/user"
 )
 
 // Mapping to DTO structure

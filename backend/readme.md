@@ -3,7 +3,6 @@
 ## Пакеты
 * github.com/gin-gonic/gin
 * github.com/dgrijalva/jwt-go ???
-* gorm.io/gorm ???
 
 ## Структура папок
 * /cmd
