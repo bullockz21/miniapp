@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TEST
 type User struct {
 	Name string `json:"name"`
 	Age  int    `json:"age"`
@@ -36,5 +37,11 @@ func PostHandlerTest(c *gin.Context) {
 		"name": u.Name,
 		"age":  u.Age,
 	})
+
+}
+
+// TEST END
+
+func LoginHandler(c *gin.Context) {
 
 }

@@ -1,45 +1,45 @@
 package modules_customer
 
 func NewCustomer() Customer {
-	return Customer{}
+	return &CustomerImpl{}
 }
 
 // Getters
 
-func (u Customer) GetCustomerId() int {
+func (u CustomerImpl) GetCustomerId() int {
 	return u.CustomerId
 }
 
-func (u Customer) GetCustomerTgId() string {
+func (u CustomerImpl) GetCustomerTgId() string {
 	return u.CustomerTgId
 }
 
-func (u Customer) GetCustomerName() string {
+func (u CustomerImpl) GetCustomerName() string {
 	return u.CustomerName
 }
 
-func (u Customer) GetCustomerAddressList() []string {
+func (u CustomerImpl) GetCustomerAddressList() []string {
 	return u.CustomerAddress
 }
 
-func (u Customer) GetCustomerAddress(n int) string {
+func (u CustomerImpl) GetCustomerAddress(n int) string {
 	return u.CustomerAddress[n]
 }
 
 // Setters
 
-func (u *Customer) SetCustomerId(id int) {
+func (u *CustomerImpl) SetCustomerId(id int) {
 	u.CustomerId = id
 }
 
-func (u *Customer) SetCustomerTgId(id string) {
+func (u *CustomerImpl) SetCustomerTgId(id string) {
 	u.CustomerTgId = id
 }
 
-func (u *Customer) SetCustomerName(name string) {
+func (u *CustomerImpl) SetCustomerName(name string) {
 	u.CustomerName = name
 }
 
-func (u *Customer) AddCustomerAddress(address string) {
+func (u *CustomerImpl) AddCustomerAddress(address string) {
 	u.CustomerAddress = append(u.CustomerAddress, address)
 }

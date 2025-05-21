@@ -10,58 +10,60 @@ import (
 
 func FromCustomerToDTO(u modules_customer.Customer) CustomerDTO {
 	return CustomerDTO{
-		CustomerId:      u.CustomerId,
-		CustomerTgId:    u.CustomerTgId,
-		CustomerName:    u.CustomerName,
-		CustomerAddress: u.CustomerAddress,
+		CustomerId:      u.GetCustomerId(),
+		CustomerTgId:    u.GetCustomerTgId(),
+		CustomerName:    u.GetCustomerName(),
+		CustomerAddress: u.GetCustomerAddressList(),
 	}
 }
 
 func FromMenuToDTO(m modules_menu.Menu) MenuDTO {
 	return MenuDTO{
-		MenuId:       m.MenuId,
-		MenuName:     m.MenuName,
-		MenuCategory: m.MenuCategory,
-		MenuPrice:    m.MenuPrice,
+		MenuId:       m.GetMenuId(),
+		MenuName:     m.GetMenuName(),
+		MenuCategory: m.GetMenuCategory(),
+		MenuPrice:    m.GetMenuPrice(),
 	}
 }
 
 func FromOrderToDTO(o modules_order.Order) OrderDTO {
 	return OrderDTO{
-		OrderId:     o.OrderId,
-		CustomerId:  o.OrderCustomerId,
-		MenuId:      o.OrderMenuId,
-		OrderStatus: o.OrderStatus,
-		Address:     o.OrderAddress,
+		OrderId:     o.GetOrderId(),
+		CustomerId:  o.GetOrderCustomerId(),
+		MenuId:      o.GetOrderMenuId(),
+		OrderStatus: o.GetOrderStatus(),
+		Address:     o.GetOrderAddress(),
 	}
 }
 
 // Mapping from DTO structure
 
 func FromDTOToCustomer(u CustomerDTO) modules_customer.Customer {
-	return modules_customer.Customer{
-		CustomerId:      u.CustomerId,
-		CustomerTgId:    u.CustomerTgId,
-		CustomerName:    u.CustomerName,
-		CustomerAddress: u.CustomerAddress,
+	cust := modules_customer.NewCustomer()
+	cust.SetCustomerId(u.CustomerId)
+	cust.SetCustomerName(u.CustomerName)
+	cust.SetCustomerTgId(u.CustomerTgId)
+	for _, address := range u.CustomerAddress {
+		cust.AddCustomerAddress(address)
 	}
+	return cust
 }
 
 func FromDTOToMenu(m MenuDTO) modules_menu.Menu {
-	return modules_menu.Menu{
-		MenuId:       m.MenuId,
-		MenuName:     m.MenuName,
-		MenuCategory: m.MenuCategory,
-		MenuPrice:    m.MenuPrice,
-	}
+	menu := modules_menu.NewMenu()
+	menu.SetMenuId(m.MenuId)
+	menu.SetMenuName(m.MenuName)
+	menu.SetMenuCategory(m.MenuCategory)
+	menu.SetMenuPrice(m.MenuPrice)
+	return menu
 }
 
 func FromDTOToOrder(o OrderDTO) modules_order.Order {
-	return modules_order.Order{
-		OrderId:         o.OrderId,
-		OrderCustomerId: o.CustomerId,
-		OrderMenuId:     o.MenuId,
-		OrderStatus:     o.OrderStatus,
-		OrderAddress:    o.Address,
-	}
+	order := modules_order.NewOrder()
+	order.SetOrderId(o.OrderId)
+	order.SetOrderCustomerId(o.CustomerId)
+	order.SetOrderMenuId(o.MenuId)
+	order.SetOrderAddress(o.Address)
+	order.SetOrderStatus(o.OrderStatus)
+	return order
 }

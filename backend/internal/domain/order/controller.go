@@ -1,49 +1,49 @@
 package modules_order
 
 func NewOrder() Order {
-	return Order{}
+	return &OrderImpl{}
 }
 
 // Getters
 
-func (o Order) GetOrderId() int {
+func (o OrderImpl) GetOrderId() int {
 	return o.OrderId
 }
 
-func (o Order) GetOrderCustomerId() int {
+func (o OrderImpl) GetOrderCustomerId() int {
 	return o.OrderCustomerId
 }
 
-func (o Order) GetOrderMenuId() int {
+func (o OrderImpl) GetOrderMenuId() int {
 	return o.OrderMenuId
 }
 
-func (o Order) GetOrderStatus() int {
+func (o OrderImpl) GetOrderStatus() int {
 	return o.OrderStatus
 }
 
-func (o Order) GetOrderAddress() string {
+func (o OrderImpl) GetOrderAddress() string {
 	return o.OrderAddress
 }
 
 // Setters
 
-func (o *Order) SetOrderId(id int) {
+func (o *OrderImpl) SetOrderId(id int) {
 	o.OrderId = id
 }
 
-func (o *Order) SetOrderCustomerId(id int) {
+func (o *OrderImpl) SetOrderCustomerId(id int) {
 	o.OrderCustomerId = id
 }
 
-func (o *Order) SetOrderMenuId(id int) {
+func (o *OrderImpl) SetOrderMenuId(id int) {
 	o.OrderMenuId = id
 }
 
-func (o *Order) SetOrderStatus(stat int) {
+func (o *OrderImpl) SetOrderStatus(stat int) {
 	o.OrderStatus = stat
 }
 
-func (o *Order) SetOrderAddress(addr string) {
+func (o *OrderImpl) SetOrderAddress(addr string) {
 	o.OrderAddress = addr
 }

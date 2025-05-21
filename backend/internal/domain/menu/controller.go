@@ -1,41 +1,41 @@
 package modules_menu
 
 func NewMenu() Menu {
-	return Menu{}
+	return &MenuImpl{}
 }
 
 // Getters
 
-func (m Menu) GetMenuId() int {
+func (m MenuImpl) GetMenuId() int {
 	return m.MenuId
 }
 
-func (m Menu) GetMenuName() string {
+func (m MenuImpl) GetMenuName() string {
 	return m.MenuName
 }
 
-func (m Menu) GetMenuCategory() int {
+func (m MenuImpl) GetMenuCategory() int {
 	return m.MenuCategory
 }
 
-func (m Menu) GetMenuPrice() int {
+func (m MenuImpl) GetMenuPrice() int {
 	return m.MenuPrice
 }
 
 //Setters
 
-func (m *Menu) SetMenuId(id int) {
+func (m *MenuImpl) SetMenuId(id int) {
 	m.MenuId = id
 }
 
-func (m *Menu) SetMenuName(name string) {
+func (m *MenuImpl) SetMenuName(name string) {
 	m.MenuName = name
 }
 
-func (m *Menu) SetMenuCategory(cat int) {
+func (m *MenuImpl) SetMenuCategory(cat int) {
 	m.MenuCategory = cat
 }
 
-func (m *Menu) SetMenuPrice(pri int) {
+func (m *MenuImpl) SetMenuPrice(pri int) {
 	m.MenuPrice = pri
 }
