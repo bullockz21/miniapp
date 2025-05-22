@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	handlers "miniapp/internal/handlers/http"
-	"miniapp/internal/handlers/middleware"
 	"miniapp/internal/infrastructure/database/db"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
@@ -31,13 +30,11 @@ func main() {
 
 	r := gin.Default()
 
-	r.Use(middleware.AuthMiddleware())
-	// TEST
-	r.Use(middleware.MiddlewareTest())
-	r.GET("/", handlers.GetHandlerTest)
-	r.POST("/", handlers.PostHandlerTest)
-	// TEST END
-	r.GET("/login", handlers.LoginHandler)
+	// r.Use(middleware.AuthMiddleware())
+	// r.Use(middleware.MiddlewareTest())
 
-	r.Run(":8080")
+	handler := handlers.NewHandler(logger, repository)
+	handler.Register(r)
+
+	r.Run(":8181")
 }

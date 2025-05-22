@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"miniapp/internal/infrastructure/database/storage"
+	"miniapp/pkg/cfg"
+	"miniapp/pkg/logger"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +15,34 @@ type User struct {
 	Age  int    `json:"age"`
 }
 
-func GetHandlerTest(c *gin.Context) {
+type Handler struct {
+	logger  *logger.Logger
+	storage storage.Storage
+	cfg     cfg.Cfg
+}
+
+func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
+	return Handler{
+		logger:  logger,
+		storage: storage,
+		cfg:     *cfg.GetConfig(),
+	}
+}
+
+func (h *Handler) Register(r *gin.Engine) {
+
+	r.GET("/", h.GetHandlerTest)
+	r.POST("/", h.PostHandlerTest)
+	// TEST END
+	r.GET("/login", h.LoginHandler)
+	r.GET("/hello", h.HelloHandler)
+}
+
+func (h *Handler) HelloHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, string("Hello World!"))
+}
+
+func (h *Handler) GetHandlerTest(c *gin.Context) {
 	u := User{
 		Name: "Susan",
 		Age:  21,
@@ -23,7 +53,7 @@ func GetHandlerTest(c *gin.Context) {
 	})
 }
 
-func PostHandlerTest(c *gin.Context) {
+func (h *Handler) PostHandlerTest(c *gin.Context) {
 	u := &User{
 		Name: "",
 		Age:  0,
@@ -42,6 +72,6 @@ func PostHandlerTest(c *gin.Context) {
 
 // TEST END
 
-func LoginHandler(c *gin.Context) {
+func (h *Handler) LoginHandler(c *gin.Context) {
 
 }
