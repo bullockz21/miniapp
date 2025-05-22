@@ -4,7 +4,7 @@
 CREATE TABLE users
 (
     id SERIAL PRIMARY KEY,
-    user_name VARCHAR(150) UNIQUE, NOT NULL
+    user_name VARCHAR(150) UNIQUE NOT NULL,
     role_id INT,
     password_hash VARCHAR(100),
     email VARCHAR(100),
