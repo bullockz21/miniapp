@@ -14,7 +14,7 @@ import (
 // created_at DATE,
 // deleted_at DATE
 
-func (r *repository) SaveUser(ctx context.Context, newUser dto.UserDTO) (id int, err error) {
+func (r *repository) SaveNewUser(ctx context.Context, newUser dto.UserDTO) (id int, err error) {
 
 	r.logger.Infoln("creating user")
 

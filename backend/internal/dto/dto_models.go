@@ -26,10 +26,20 @@ type MenuDTO struct {
 	MenuPrice    int    `json:"menu_price"`
 }
 
+// id SERIAL PRIMARY KEY,
+// customer_id INT NOT NULL,
+// delivery_type_id INT NOT NULL,
+// menu_id INT NOT NULL,
+// order_number INT NOT NULL,
+// order_state_id INT DEFAULT 1,
+// order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 type OrderDTO struct {
-	OrderId     int    `json:"order_id"`
-	CustomerId  int    `json:"customer_id"`
-	MenuId      int    `json:"menu_id"`
-	OrderStatus int    `json:"order_status"`
-	Address     string `json:"address"`
+	Id           int    `json:"id"`
+	CustomerId   int    `json:"customer_id"`
+	MenuId       int    `json:"menu_id"`
+	DeliveryType int    `json:"delivery_type_id"`
+	Number       int    `json:"order_num"`
+	Status       int    `json:"order_state_id"`
+	Date         string `json:"order_date"`
 }

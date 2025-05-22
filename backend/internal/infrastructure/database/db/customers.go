@@ -6,7 +6,7 @@ import (
 	"miniapp/internal/dto"
 )
 
-func (r *repository) SaveCustomer(ctx context.Context, newCustomer dto.CustomerDTO) (id int, err error) {
+func (r *repository) SaveNewCustomer(ctx context.Context, newCustomer dto.CustomerDTO) (id int, err error) {
 
 	r.logger.Infoln("creating customer")
 
