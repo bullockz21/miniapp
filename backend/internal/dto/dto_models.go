@@ -19,11 +19,18 @@ type UserDTO struct {
 	DeletedAt    string `json:"deleted_at"`
 }
 
+// id SERIAL PRIMARY KEY,
+// type_id INT NOT NULL,
+// name VARCHAR(50) UNIQUE NOT NULL,
+// price NUMERIC,
+// description VARCHAR(1000)
+
 type MenuDTO struct {
-	MenuId       int    `json:"menu_id"`
-	MenuName     string `json:"menu_name"`
-	MenuCategory int    `json:"menu_category"`
-	MenuPrice    int    `json:"menu_price"`
+	Id          int     `json:"id"`
+	Name        string  `json:"name"`
+	Category    int     `json:"type_id"`
+	Price       float64 `json:"price"`
+	Description string  `json:"description"`
 }
 
 // id SERIAL PRIMARY KEY,

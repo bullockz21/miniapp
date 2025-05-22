@@ -8,7 +8,7 @@ import (
 
 func (r *repository) SaveNewCustomer(ctx context.Context, newCustomer dto.CustomerDTO) (id int, err error) {
 
-	r.logger.Infoln("creating customer")
+	r.logger.Infoln("saving new customer in db")
 
 	query := `
 			INSERT INTO customers (
@@ -25,7 +25,7 @@ func (r *repository) SaveNewCustomer(ctx context.Context, newCustomer dto.Custom
 		return id, fmt.Errorf("failed to create customer")
 	}
 
-	r.logger.Infoln("created customer with id:", id)
+	r.logger.Infoln("customer saved with id:", id)
 
 	return id, nil
 }
@@ -51,6 +51,9 @@ func (r *repository) LoadCustomer(ctx context.Context, tg_id int) (customer dto.
 	if err != nil {
 		return customer, err
 	}
+
+	r.logger.Infoln("customer loaded")
+
 	return customer, nil
 }
 
