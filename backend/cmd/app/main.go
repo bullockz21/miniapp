@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"miniapp/internal/cfg"
 	handlers "miniapp/internal/handlers/http"
 	"miniapp/internal/handlers/middleware"
 	"miniapp/internal/infrastructure/database/db"
+	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
 	"miniapp/pkg/postgresql"
 

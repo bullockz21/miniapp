@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"miniapp/internal/cfg"
+	"miniapp/pkg/cfg"
 	"miniapp/pkg/utils"
 	"time"
 
