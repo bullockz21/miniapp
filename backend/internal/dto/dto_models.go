@@ -1,10 +1,22 @@
 package dto
 
 type CustomerDTO struct {
-	CustomerId      int      `json:"customer_id"`
-	CustomerTgId    string   `json:"customer_telegram_id"`
-	CustomerName    string   `json:"customer_name"`
-	CustomerAddress []string `json:"customer_address"`
+	Id          int      `json:"customer_id"`
+	TgId        string   `json:"customer_telegram_id"`
+	Name        string   `json:"customer_name"`
+	Address     []string `json:"customer_address"`
+	PhoneNumber string   `json:"phone_number"`
+	CreatedAt   string   `json:"created_at"`
+}
+
+type UserDTO struct {
+	Id           int    `json:"id"`
+	UserName     string `json:"user_name"`
+	RoleId       int    `json:"role_id"`
+	PasswordHash string `json:"password_hash"`
+	Email        string `json:"email"`
+	CreatedAt    string `json:"created_at"`
+	DeletedAt    string `json:"deleted_at"`
 }
 
 type MenuDTO struct {

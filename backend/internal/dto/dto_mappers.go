@@ -10,10 +10,10 @@ import (
 
 func FromCustomerToDTO(u modules_customer.Customer) CustomerDTO {
 	return CustomerDTO{
-		CustomerId:      u.GetCustomerId(),
-		CustomerTgId:    u.GetCustomerTgId(),
-		CustomerName:    u.GetCustomerName(),
-		CustomerAddress: u.GetCustomerAddressList(),
+		Id:      u.GetCustomerId(),
+		TgId:    u.GetCustomerTgId(),
+		Name:    u.GetCustomerName(),
+		Address: u.GetCustomerAddressList(),
 	}
 }
 
@@ -40,10 +40,10 @@ func FromOrderToDTO(o modules_order.Order) OrderDTO {
 
 func FromDTOToCustomer(u CustomerDTO) modules_customer.Customer {
 	cust := modules_customer.NewCustomer()
-	cust.SetCustomerId(u.CustomerId)
-	cust.SetCustomerName(u.CustomerName)
-	cust.SetCustomerTgId(u.CustomerTgId)
-	for _, address := range u.CustomerAddress {
+	cust.SetCustomerId(u.Id)
+	cust.SetCustomerName(u.Name)
+	cust.SetCustomerTgId(u.TgId)
+	for _, address := range u.Address {
 		cust.AddCustomerAddress(address)
 	}
 	return cust

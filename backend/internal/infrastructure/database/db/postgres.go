@@ -22,11 +22,3 @@ func NewRepository(client postgresql.Client, logger *logger.Logger) storage.Stor
 		logger: logger,
 	}
 }
-
-func (r *repository) SaveCustomer() {
-
-}
-
-func (r *repository) LoadCustomer() {
-
-}

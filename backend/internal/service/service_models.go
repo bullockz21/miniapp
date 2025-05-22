@@ -2,7 +2,7 @@ package service
 
 import (
 	"miniapp/internal/dto"
-	"miniapp/internal/infrastructure/database/repository"
+	"miniapp/internal/infrastructure/database/storage"
 )
 
 // Customer Service
@@ -15,7 +15,7 @@ type CustomerService interface {
 }
 
 type CustomerServiceImpl struct {
-	Repo repository.Repository
+	Repo storage.Storage
 }
 
 // Menu Service
@@ -24,7 +24,7 @@ type MenuService interface {
 }
 
 type MenuServiceImpl struct {
-	Repo repository.Repository
+	Repo storage.Storage
 }
 
 // Order Service
@@ -33,7 +33,7 @@ type OrderService interface {
 }
 
 type OrderServiceImpl struct {
-	Repo repository.Repository
+	Repo storage.Storage
 }
 
 // Bucket Service
@@ -42,5 +42,5 @@ type BucketService interface {
 }
 
 type BucketServiceImpl struct {
-	Repo repository.Repository
+	Repo storage.Storage
 }

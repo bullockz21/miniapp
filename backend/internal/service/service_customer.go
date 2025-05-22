@@ -2,10 +2,10 @@ package service
 
 import (
 	"miniapp/internal/dto"
-	"miniapp/internal/infrastructure/database/repository"
+	"miniapp/internal/infrastructure/database/storage"
 )
 
-func NewCustomerService(repo repository.Repository) CustomerService {
+func NewCustomerService(repo storage.Storage) CustomerService {
 	return &CustomerServiceImpl{Repo: repo}
 }
 
