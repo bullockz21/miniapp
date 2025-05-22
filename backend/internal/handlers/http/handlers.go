@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"context"
+	"fmt"
 	"miniapp/internal/infrastructure/database/storage"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
@@ -30,16 +32,30 @@ func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
 }
 
 func (h *Handler) Register(r *gin.Engine) {
-
 	r.GET("/", h.GetHandlerTest)
 	r.POST("/", h.PostHandlerTest)
 	// TEST END
 	r.GET("/login", h.LoginHandler)
 	r.GET("/hello", h.HelloHandler)
+	r.GET("/users", h.GetUsersList)
 }
 
 func (h *Handler) HelloHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, string("Hello World!"))
+}
+
+func (h *Handler) GetUsersList(c *gin.Context) {
+	users, err := h.storage.LoadAllUsers(context.Background())
+
+	fmt.Println(users)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	}
+
+	// reqBody, _ := json.Marshal(users)
+
+	c.JSON(http.StatusOK, users)
 }
 
 func (h *Handler) GetHandlerTest(c *gin.Context) {

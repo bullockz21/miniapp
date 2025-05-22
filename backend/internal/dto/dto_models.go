@@ -1,5 +1,7 @@
 package dto
 
+import "time"
+
 type CustomerDTO struct {
 	Id          int      `json:"customer_id"`
 	TgId        string   `json:"customer_telegram_id"`
@@ -10,13 +12,13 @@ type CustomerDTO struct {
 }
 
 type UserDTO struct {
-	Id           int    `json:"id"`
-	UserName     string `json:"user_name"`
-	RoleId       int    `json:"role_id"`
-	PasswordHash string `json:"password_hash"`
-	Email        string `json:"email"`
-	CreatedAt    string `json:"created_at"`
-	DeletedAt    string `json:"deleted_at"`
+	Id           int       `json:"id"`
+	UserName     string    `json:"user_name"`
+	RoleId       int       `json:"role_id"`
+	PasswordHash string    `json:"password_hash"`
+	Email        string    `json:"email"`
+	CreatedAt    time.Time `json:"created_at"`
+	DeletedAt    time.Time `json:"deleted_at"`
 }
 
 // id SERIAL PRIMARY KEY,

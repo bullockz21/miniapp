@@ -51,7 +51,7 @@ func (r *repository) LoadUser(ctx context.Context, id int) (user dto.UserDTO, er
 			email,
 			created_at,
 			deleted_at
-		FROM customers 
+		FROM users 
 		WHERE id = $1
 		`
 
@@ -63,6 +63,42 @@ func (r *repository) LoadUser(ctx context.Context, id int) (user dto.UserDTO, er
 	}
 
 	return user, nil
+}
+
+func (r *repository) LoadAllUsers(ctx context.Context) (users []dto.UserDTO, err error) {
+
+	r.logger.Infoln("loading all users")
+
+	query := ` 
+		SELECT 
+			id,
+			user_name,
+			role_id,
+			password_hash,
+			email,
+			created_at,
+			deleted_at
+		FROM users
+		`
+
+	r.logger.Traceln("SQL Query:", formatQuery(query))
+	rows, err := r.client.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		tempUser := dto.UserDTO{}
+		err = rows.Scan(&tempUser.Id, &tempUser.UserName, &tempUser.RoleId, &tempUser.PasswordHash, &tempUser.Email, &tempUser.CreatedAt, &tempUser.DeletedAt)
+
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, tempUser)
+	}
+
+	return users, nil
 }
 
 func (r *repository) UpdateUser(ctx context.Context, user dto.UserDTO) (id int, err error) {
