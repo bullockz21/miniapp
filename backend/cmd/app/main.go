@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	handlers "miniapp/internal/handlers/http"
+	"miniapp/internal/handlers"
 	"miniapp/internal/infrastructure/database/db"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"

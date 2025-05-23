@@ -15,6 +15,7 @@ type UserDTO struct {
 	Id           int       `json:"id"`
 	UserName     string    `json:"user_name"`
 	RoleId       int       `json:"role_id"`
+	Password     string    `json:"password"`
 	PasswordHash string    `json:"password_hash"`
 	Email        string    `json:"email"`
 	CreatedAt    time.Time `json:"created_at"`

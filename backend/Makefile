@@ -4,7 +4,7 @@ LOGRUS := github.com/sirupsen/logrus github.com/sirupsen/logrus@v1.9.3
 CLEANENV := github.com/ilyakaznacheev/cleanenv
 POSTGRESQL := github.com/jackc/pgx github.com/jackc/pgx/v5/pgxpool
 
-PSQLPASS := *ENTER YOUR PSQL PASS HERE*
+PSQLPASS := 
 
 all:
 	go run cmd/app/main.go

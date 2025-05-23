@@ -9,20 +9,20 @@ CREATE TABLE users
     password_hash VARCHAR(100),
     email VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP
+    deleted_at TIMESTAMP DEFAULT '1999-01-01 00:00:00'
 );
 
 INSERT INTO users (
-    user_name, password_hash, email, deleted_at
+    user_name, password_hash, email
 )
     VALUES (
-      'firstTestUser', 'asdasdqwe123asd', 'firstUser@email.com', '1999-01-01 00:00:00'
+      'firstTestUser', 'asdasdqwe123asd', 'firstUser@email.com'
     ),
     (
-      'secondTestUser', 'glkgiouioioff2', 'secondUser@email.com',  '1999-01-01 00:00:00'
+      'secondTestUser', 'glkgiouioioff2', 'secondUser@email.com'
     ),
     (
-      'thirdTestUser', 'kauiwuwuwydydyd', 'thirdUser@email.com',  '1999-01-01 00:00:00'
+      'thirdTestUser', 'kauiwuwuwydydyd', 'thirdUser@email.com'
     )
   
 -- +goose StatementEnd
