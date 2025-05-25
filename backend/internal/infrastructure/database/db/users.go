@@ -101,23 +101,63 @@ func (r *repository) LoadAllUsers(ctx context.Context) (users []dto.UserDTO, err
 	return users, nil
 }
 
-func (r *repository) UpdateUser(ctx context.Context, user dto.UserDTO) (id int, err error) {
+func (r *repository) UpdateUserPassword(ctx context.Context, user dto.UserDTO) (id int, err error) {
 
-	r.logger.Infoln("updating customer, id:", user.Id)
+	r.logger.Infoln("updating users password, id:", user.Id)
 
 	query := `
 			UPDATE users
 			SET
-				user_name,
-				role_id,
-				password_hash,
-				email
+				password_hash = $2
 			WHERE id = $1
-			VALUES ($1, $2, $3, $4, $5)
 			RETURNING id
 			`
 	r.logger.Traceln("SQL Query:", formatQuery(query))
-	r.client.QueryRow(ctx, query, user.UserName, user.RoleId, user.PasswordHash, user.Email).Scan(&id)
+	r.client.QueryRow(ctx, query, user.Id, user.PasswordHash).Scan(&id)
+	if id == 0 {
+		return id, fmt.Errorf("failed to update user")
+	}
+
+	r.logger.Infoln("successful updated user, id:", id)
+
+	return id, nil
+}
+
+func (r *repository) UpdateUserEmail(ctx context.Context, user dto.UserDTO) (id int, err error) {
+
+	r.logger.Infoln("updating users email, id:", user.Id)
+
+	query := `
+			UPDATE users
+			SET
+				email = $1
+			WHERE id = $2
+			RETURNING id
+			`
+	r.logger.Traceln("SQL Query:", formatQuery(query))
+	r.client.QueryRow(ctx, query, user.Email, user.Id).Scan(&id)
+	if id == 0 {
+		return id, fmt.Errorf("failed to update user")
+	}
+
+	r.logger.Infoln("successful updated user, id:", id)
+
+	return id, nil
+}
+
+func (r *repository) UpdateUserRoleId(ctx context.Context, user dto.UserDTO) (id int, err error) {
+
+	r.logger.Infoln("updating users role id, id:", user.Id)
+
+	query := `
+			UPDATE users
+			SET
+				role_id = $2
+			WHERE id = $1
+			RETURNING id
+			`
+	r.logger.Traceln("SQL Query:", formatQuery(query))
+	r.client.QueryRow(ctx, query, user.Id, user.RoleId).Scan(&id)
 	if id == 0 {
 		return id, fmt.Errorf("failed to update user")
 	}

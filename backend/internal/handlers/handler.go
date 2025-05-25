@@ -28,6 +28,10 @@ func (h *Handler) Register(r *gin.Engine) {
 	r.GET("/users", h.GetUsersList)
 	r.GET("/users/:id", h.GetUserById)
 	r.POST("/users", h.CreateUser)
+	r.PATCH("/users/:id/password", h.UpdateUserPasswordById)
+	r.PATCH("/users/:id/email", h.UpdateUserEmailById)
+	r.PATCH("/users/:id/role_id", h.UpdateUserRoleIdById)
+	r.DELETE("/users/:id", h.DeleteUserById)
 }
 
 func (h *Handler) HelloHandler(c *gin.Context) {

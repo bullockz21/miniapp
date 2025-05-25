@@ -13,7 +13,9 @@ type Storage interface {
 	SaveNewUser(ctx context.Context, newUser dto.UserDTO) (id int, err error)
 	LoadUser(ctx context.Context, id int) (user dto.UserDTO, err error)
 	LoadAllUsers(ctx context.Context) (users []dto.UserDTO, err error)
-	UpdateUser(ctx context.Context, user dto.UserDTO) (id int, err error)
+	UpdateUserPassword(ctx context.Context, user dto.UserDTO) (id int, err error)
+	UpdateUserEmail(ctx context.Context, user dto.UserDTO) (id int, err error)
+	UpdateUserRoleId(ctx context.Context, user dto.UserDTO) (id int, err error)
 	DeleteUser(ctx context.Context, id int) (err error)
 
 	UpdateOrder(ctx context.Context, order dto.OrderDTO) (id int, err error)
