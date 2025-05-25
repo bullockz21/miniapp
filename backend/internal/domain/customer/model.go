@@ -1,15 +1,6 @@
 package modules_customer
 
 type Customer interface {
-	GetCustomerId() int
-	GetCustomerTgId() string
-	GetCustomerName() string
-	GetCustomerAddressList() []string
-	GetCustomerAddress(n int) string
-	SetCustomerId(id int)
-	SetCustomerTgId(id string)
-	SetCustomerName(name string)
-	AddCustomerAddress(address string)
 }
 
 type CustomerImpl struct {

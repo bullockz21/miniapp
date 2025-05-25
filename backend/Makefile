@@ -3,6 +3,7 @@ JWT = github.com/golang-jwt/jwt/v5
 LOGRUS = github.com/sirupsen/logrus github.com/sirupsen/logrus@v1.9.3
 CLEANENV = github.com/ilyakaznacheev/cleanenv
 POSTGRESQL = github.com/jackc/pgx github.com/jackc/pgx/v5/pgxpool
+ENV = github.com/joho/godotenv
 
 PSQLPASS := postgres
 
@@ -13,7 +14,7 @@ init:
 	go mod init miniapp
 
 get:
-	go get -u $(GIN) $(JWT) $(LOGRUS) $(CLEANENV) $(POSTGRESQL)
+	go get -u $(GIN) $(JWT) $(LOGRUS) $(CLEANENV) $(POSTGRESQL) $(ENV)
 
 build:
 	mkdir -p build

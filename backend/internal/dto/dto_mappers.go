@@ -1,19 +1,15 @@
 package dto
 
-import (
-	modules_customer "miniapp/internal/domain/customer"
-)
-
 // Mapping to DTO structure
 
-func FromCustomerToDTO(u modules_customer.Customer) CustomerDTO {
-	return CustomerDTO{
-		Id:      u.GetCustomerId(),
-		TgId:    u.GetCustomerTgId(),
-		Name:    u.GetCustomerName(),
-		Address: u.GetCustomerAddressList(),
-	}
-}
+// func FromCustomerToDTO(u modules_customer.Customer) CustomerDTO {
+// 	return CustomerDTO{
+// 		Id:      u.GetCustomerId(),
+// 		TgId:    u.GetCustomerTgId(),
+// 		Name:    u.GetCustomerName(),
+// 		Address: u.GetCustomerAddressList(),
+// 	}
+// }
 
 // func FromMenuToDTO(m modules_menu.Menu) MenuDTO {
 // 	return MenuDTO{
@@ -36,16 +32,16 @@ func FromCustomerToDTO(u modules_customer.Customer) CustomerDTO {
 
 // Mapping from DTO structure
 
-func FromDTOToCustomer(u CustomerDTO) modules_customer.Customer {
-	cust := modules_customer.NewCustomer()
-	cust.SetCustomerId(u.Id)
-	cust.SetCustomerName(u.Name)
-	cust.SetCustomerTgId(u.TgId)
-	for _, address := range u.Address {
-		cust.AddCustomerAddress(address)
-	}
-	return cust
-}
+// func FromDTOToCustomer(u CustomerDTO) modules_customer.Customer {
+// 	cust := modules_customer.NewCustomer()
+// 	cust.SetCustomerId(u.Id)
+// 	cust.SetCustomerName(u.Name)
+// 	cust.SetCustomerTgId(u.TgId)
+// 	for _, address := range u.Address {
+// 		cust.AddCustomerAddress(address)
+// 	}
+// 	return cust
+// }
 
 // func FromDTOToMenu(m MenuDTO) modules_menu.Menu {
 // 	menu := modules_menu.NewMenu()

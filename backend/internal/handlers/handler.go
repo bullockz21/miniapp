@@ -19,7 +19,7 @@ func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
 	return Handler{
 		logger:  logger,
 		storage: storage,
-		cfg:     *cfg.GetConfig(),
+		cfg:     *cfg.GetConfigEnv(),
 	}
 }
 

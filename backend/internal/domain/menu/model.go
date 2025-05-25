@@ -1,14 +1,6 @@
 package modules_menu
 
 type Menu interface {
-	GetMenuId() int
-	GetMenuName() string
-	GetMenuCategory() int
-	GetMenuPrice() int
-	SetMenuId(id int)
-	SetMenuName(name string)
-	SetMenuCategory(cat int)
-	SetMenuPrice(pri int)
 }
 
 type MenuImpl struct {

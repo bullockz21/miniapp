@@ -1,16 +1,6 @@
 package modules_order
 
 type Order interface {
-	GetOrderId() int
-	GetOrderCustomerId() int
-	GetOrderMenuId() int
-	GetOrderStatus() int
-	GetOrderAddress() string
-	SetOrderId(id int)
-	SetOrderCustomerId(id int)
-	SetOrderMenuId(id int)
-	SetOrderStatus(stat int)
-	SetOrderAddress(addr string)
 }
 
 type OrderImpl struct {

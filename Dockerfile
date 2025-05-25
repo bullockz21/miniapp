@@ -7,7 +7,8 @@ COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 COPY backend/ ./backend/
-COPY backend/config.yml ./
+# COPY backend/config.yml ./
+COPY ./.env ./
 
 RUN cd backend && make build
 

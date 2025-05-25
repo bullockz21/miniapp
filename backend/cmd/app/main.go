@@ -15,7 +15,7 @@ func main() {
 
 	logger := logger.GetLogger()
 
-	cfg := cfg.GetConfig()
+	cfg := cfg.GetConfigEnv()
 
 	logger.Infoln("Connecting postgresql")
 
