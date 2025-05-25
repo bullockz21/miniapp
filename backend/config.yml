@@ -2,11 +2,11 @@
 jwt_secret_key: 
 is_debug: true
 listen:
-  bind_ip: 127.0.0.1
+  bind_ip: 0.0.0.0
   port: 8080
 postgresql:
-  host: 127.0.0.1
+  host: postgres
   port: 5432
-  database: 
-  username: 
-  password: 
+  database: postgres
+  username: postgres
+  password: postgres

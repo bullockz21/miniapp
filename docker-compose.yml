@@ -1,7 +1,7 @@
 services:
   postgres:
-    image: postgres:16
-    container_name: miniapp_demo
+    image: postgres
+    container_name: miniapp_pg
     restart: always
     env_file: 
       - .env 
@@ -12,24 +12,19 @@ services:
     ports:
       - "5432:5432"  
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data 
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: miniapp_demo
+  miniapp:
+    container_name: miniapp
     restart: always
-    env_file:
-      - .env
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "5050:80"
-    depends_on:
-      - postgres
+      - "8080:8080"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin  
+      - miniapp_data:/miniapp
 
 volumes:
   postgres_data:
-  pgadmin_data:
+  miniapp_data:

@@ -1,4 +1,5 @@
-FROM golang:1.23
+FROM golang
+ENV GOPROXY=https://goproxy.io,https://proxy.golang.org,https://gocenter.io,direct
 
 WORKDIR /app
 
@@ -6,9 +7,11 @@ COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 COPY backend/ ./backend/
+COPY backend/config.yml ./
 
-COPY backend/.env .env
+RUN cd backend && make build
 
-RUN go build -o miniapp_demo ./backend/cmd/main.go
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
-CMD ["./miniapp_demo"]
+CMD ["./backend/build/miniapp"]
+

@@ -36,5 +36,5 @@ func main() {
 	handler := handlers.NewHandler(logger, repository)
 	handler.Register(r)
 
-	r.Run(":8181")
+	r.Run(":8080")
 }
