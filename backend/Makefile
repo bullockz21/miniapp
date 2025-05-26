@@ -5,6 +5,8 @@ CLEANENV = github.com/ilyakaznacheev/cleanenv
 POSTGRESQL = github.com/jackc/pgx github.com/jackc/pgx/v5/pgxpool
 ENV = github.com/joho/godotenv
 
+GOOSE = github.com/pressly/goose
+
 PSQLPASS := postgres
 
 all:
@@ -24,9 +26,13 @@ goose_set_path:
 	export PATH=$(PATH):home/$(USER)/go/bin/
 
 goose_up:
-	goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@postgres:5432/postgres?sslmode=disable" up
+	# goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@postgres:5432/postgres?sslmode=disable" up
+	fish -c 'goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@0.0.0.0:5432/postgres?sslmode=disable" up'
 
 goose_down:
-	goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@postgres:5432/postgres?sslmode=disable" down
+	goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@0.0.0.0:5432/postgres?sslmode=disable" down
 
 .PHONY: all init get build goose_set_path goose_up goose_down
+
+test:
+	echo "oops"

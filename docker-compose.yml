@@ -17,6 +17,8 @@ services:
   miniapp:
     container_name: miniapp
     restart: always
+    depends_on:
+      - postgres
     build:
       context: .
       dockerfile: Dockerfile

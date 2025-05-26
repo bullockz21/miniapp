@@ -54,6 +54,34 @@ func (r *repository) LoadMenuPosition(ctx context.Context, id int) (menu dto.Men
 	return menu, nil
 }
 
+func (r *repository) LoadAllMenu(ctx context.Context) (menu []dto.MenuDTO, err error) {
+	r.logger.Infoln("loading menu list")
+	query := ` 
+		SELECT 
+			id,
+			type_id,
+			name,
+			price,
+			description
+		FROM menu 
+		`
+	r.logger.Traceln("SQL Query:", formatQuery(query))
+	menuList := make([]dto.MenuDTO, 0)
+	rows, err := r.client.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		tempMenu := dto.MenuDTO{}
+		err = rows.Scan(&tempMenu.Id, &tempMenu.Category, &tempMenu.Name, &tempMenu.Price, &tempMenu.Description)
+		if err != nil {
+			return nil, err
+		}
+		menuList = append(menuList, tempMenu)
+	}
+	return menuList, nil
+}
+
 func (r *repository) UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO) (id int, err error) {
 	r.logger.Infoln("updating menu position with id:", menu.Id)
 	query := `

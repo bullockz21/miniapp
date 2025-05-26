@@ -11,7 +11,7 @@ COPY ./.env ./
 
 RUN cd backend && make build
 
-RUN go install github.com/pressly/goose/v3/cmd/goose@latest
+# RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
 CMD ["./backend/build/miniapp"]
 

@@ -32,6 +32,9 @@ func (h *Handler) Register(r *gin.Engine) {
 	r.PATCH("/users/:id/email", h.UpdateUserEmailById)
 	r.PATCH("/users/:id/role_id", h.UpdateUserRoleIdById)
 	r.DELETE("/users/:id", h.DeleteUserById)
+
+	r.GET("/menu", h.GetMenuList)
+	r.GET("/menu/:id", h.GetMenuById)
 }
 
 func (h *Handler) HelloHandler(c *gin.Context) {
