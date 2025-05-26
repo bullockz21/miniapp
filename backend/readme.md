@@ -1,5 +1,17 @@
 # Структура проекта
 
+## .env file
+
+* JWT_SECRET_KEY=
+* IS_DEBUG=true
+* LISTEN_BIND_IP=0.0.0.0
+* LISTEN_PORT=8080
+* POSTGRESQL_HOST=
+* POSTGRESQL_PORT=5432
+* POSTGRESQL_DATABASE=
+* POSTGRESQL_USERNAME=
+* POSTGRESQL_PASSWORD=
+
 ## COMMAND
 * go install github.com/pressly/goose/v3/cmd/goose@latest
 * goose -dir migrations postgres "postgresql://postgres:*password*@127.0.0.1:5432/postgres?sslmode=disable" up

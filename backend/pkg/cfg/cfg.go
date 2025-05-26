@@ -57,14 +57,6 @@ func GetConfigEnv() *Cfg {
 			logger.Infoln(help)
 			logger.Fatal(err)
 		}
-		// instance.JwtSecretKey = os.Getenv("JWT_SECRET_KEY")
-		// instance.Listen.BindIP = os.Getenv("LISTEN_BIND_IP")
-		// instance.Listen.Port = os.Getenv("LISTEN_PORT")
-		// instance.Postgresql.Host = os.Getenv("POSTGRESQL_HOST")
-		// instance.Postgresql.Port = os.Getenv("POSTGRESQL_PORT")
-		// instance.Postgresql.Database = os.Getenv("POSTGRESQL_DATABASE")
-		// instance.Postgresql.Username = os.Getenv("POSTGRESQL_USERNAME")
-		// instance.Postgresql.Password = os.Getenv("POSTGRESQL_PASSWORD")
 	})
 	return instance
 }
