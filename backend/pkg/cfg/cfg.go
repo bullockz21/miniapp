@@ -27,21 +27,6 @@ type Cfg struct {
 var instance *Cfg
 var once sync.Once
 
-// func GetConfig() *Cfg {
-// 	once.Do(func() {
-// 		logger := logger.GetLogger()
-// 		logger.Infoln("read app configuration")
-// 		instance = &Cfg{}
-// 		err := cleanenv.ReadConfig("config.yml", instance)
-// 		if err != nil {
-// 			help, _ := cleanenv.GetDescription(instance, nil)
-// 			logger.Infoln(help)
-// 			logger.Fatal(err)
-// 		}
-// 	})
-// 	return instance
-// }
-
 func GetConfigEnv() *Cfg {
 	once.Do(func() {
 		logger := logger.GetLogger()

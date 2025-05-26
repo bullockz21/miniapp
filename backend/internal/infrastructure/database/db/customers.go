@@ -7,9 +7,7 @@ import (
 )
 
 func (r *repository) SaveNewCustomer(ctx context.Context, newCustomer dto.CustomerDTO) (id int, err error) {
-
 	r.logger.Infoln("saving new customer in db")
-
 	query := `
 			INSERT INTO customers (
 				tg_name,
@@ -24,16 +22,12 @@ func (r *repository) SaveNewCustomer(ctx context.Context, newCustomer dto.Custom
 	if id == 0 {
 		return id, fmt.Errorf("failed to create customer")
 	}
-
 	r.logger.Infoln("customer saved with id:", id)
-
 	return id, nil
 }
 
 func (r *repository) LoadCustomer(ctx context.Context, tg_id int) (customer dto.CustomerDTO, err error) {
-
 	r.logger.Infoln("loading customer with tg_id:", tg_id)
-
 	query := ` 
 		SELECT 
 			id, 
@@ -44,23 +38,18 @@ func (r *repository) LoadCustomer(ctx context.Context, tg_id int) (customer dto.
 		FROM customers 
 		WHERE tg_id = $1
 		`
-
 	r.logger.Traceln("SQL Query:", formatQuery(query))
 	row := r.client.QueryRow(ctx, query, tg_id)
 	err = row.Scan(&customer.Id, &customer.Name, &customer.TgId, &customer.PhoneNumber, &customer.CreatedAt)
 	if err != nil {
 		return customer, err
 	}
-
 	r.logger.Infoln("customer loaded")
-
 	return customer, nil
 }
 
 func (r *repository) UpdateCustomer(ctx context.Context, customer dto.CustomerDTO) (id int, err error) {
-
 	r.logger.Infoln("updating customer, id:", customer.Id)
-
 	query := `
 			UPDATE customers
 			SET
@@ -76,8 +65,6 @@ func (r *repository) UpdateCustomer(ctx context.Context, customer dto.CustomerDT
 	if id == 0 {
 		return id, fmt.Errorf("failed to update customer")
 	}
-
 	r.logger.Infoln("successful updated customer, id:", id)
-
 	return id, nil
 }

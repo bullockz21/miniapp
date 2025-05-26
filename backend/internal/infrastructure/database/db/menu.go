@@ -13,9 +13,7 @@ import (
 // description VARCHAR(1000)
 
 func (r *repository) SaveNewMenuPosition(ctx context.Context, menu dto.MenuDTO) (id int, err error) {
-
 	r.logger.Infoln("saving new menu position")
-
 	query := `
 			INSERT INTO menu (
 				type_id,
@@ -31,16 +29,12 @@ func (r *repository) SaveNewMenuPosition(ctx context.Context, menu dto.MenuDTO) 
 	if id == 0 {
 		return id, fmt.Errorf("failed to create menu position")
 	}
-
 	r.logger.Infoln("created new menu position with id:", id)
-
 	return id, nil
 }
 
 func (r *repository) LoadMenuPosition(ctx context.Context, id int) (menu dto.MenuDTO, err error) {
-
 	r.logger.Infoln("loading menu position with id:", id)
-
 	query := ` 
 		SELECT 
 			id,
@@ -51,21 +45,17 @@ func (r *repository) LoadMenuPosition(ctx context.Context, id int) (menu dto.Men
 		FROM menu 
 		WHERE id = $1
 		`
-
 	r.logger.Traceln("SQL Query:", formatQuery(query))
 	row := r.client.QueryRow(ctx, query, id)
 	err = row.Scan(&menu.Id, &menu.Category, &menu.Name, &menu.Price, &menu.Description)
 	if err != nil {
 		return menu, err
 	}
-
 	return menu, nil
 }
 
 func (r *repository) UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO) (id int, err error) {
-
 	r.logger.Infoln("updating menu position with id:", menu.Id)
-
 	query := `
 			UPDATE menu
 			SET
@@ -82,14 +72,11 @@ func (r *repository) UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO) (
 	if id == 0 {
 		return id, fmt.Errorf("failed to update menu position")
 	}
-
 	r.logger.Infoln("successful updated menu position, id:", id)
-
 	return id, nil
 }
 
 func (r *repository) DeleteMenuPosition(ctx context.Context, id int) error {
-
 	ID := 0
 	query := `
 		DELETE FROM menu 
@@ -98,10 +85,8 @@ func (r *repository) DeleteMenuPosition(ctx context.Context, id int) error {
 		`
 	r.client.QueryRow(ctx, query, id).Scan(&ID)
 	r.logger.Traceln("SQL Query:", formatQuery(query))
-
 	if ID == 0 {
 		return fmt.Errorf("menu position not found")
 	}
-
 	return nil
 }
