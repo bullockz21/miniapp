@@ -25,6 +25,6 @@ type Storage interface {
 	SaveNewMenuPosition(ctx context.Context, menu dto.MenuDTO) (id int, err error)
 	LoadMenuPosition(ctx context.Context, id int) (menu dto.MenuDTO, err error)
 	LoadAllMenu(ctx context.Context) (menu []dto.MenuDTO, err error)
-	UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO) (id int, err error)
+	UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO, getId int) (id int, err error)
 	DeleteMenuPosition(ctx context.Context, id int) error
 }

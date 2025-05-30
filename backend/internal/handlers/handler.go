@@ -35,6 +35,9 @@ func (h *Handler) Register(r *gin.Engine) {
 
 	r.GET("/menu", h.GetMenuList)
 	r.GET("/menu/:id", h.GetMenuById)
+	r.POST("/menu", h.CreateMenu)
+	r.PATCH("/menu/:id", h.UpdateMenuPosition)
+	r.DELETE("menu/:id", h.DeleteMenuById)
 }
 
 func (h *Handler) HelloHandler(c *gin.Context) {

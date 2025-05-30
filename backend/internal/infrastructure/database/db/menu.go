@@ -2,8 +2,11 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"miniapp/internal/dto"
+
+	"github.com/jackc/pgx"
 )
 
 // id SERIAL PRIMARY KEY,
@@ -82,23 +85,25 @@ func (r *repository) LoadAllMenu(ctx context.Context) (menu []dto.MenuDTO, err e
 	return menuList, nil
 }
 
-func (r *repository) UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO) (id int, err error) {
-	r.logger.Infoln("updating menu position with id:", menu.Id)
+func (r *repository) UpdateMenuPosition(ctx context.Context, menu dto.MenuDTO, getId int) (id int, err error) {
+	r.logger.Infoln("updating menu position with id:", getId)
 	query := `
 			UPDATE menu
 			SET
-				type_id,
-				name,
-				price,
-				description
+				type_id = $2,
+				name = $3,
+				price = $4,
+				description = $5
 			WHERE id = $1
-			VALUES ($1, $2, $3, $4, $5)
 			RETURNING id
 			`
 	r.logger.Traceln("SQL Query:", formatQuery(query))
-	r.client.QueryRow(ctx, query, menu.Id, menu.Category, menu.Name, menu.Price, menu.Description).Scan(&id)
-	if id == 0 {
-		return id, fmt.Errorf("failed to update menu position")
+	err = r.client.QueryRow(ctx, query, getId, menu.Category, menu.Name, menu.Price, menu.Description).Scan(&id)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return 0, fmt.Errorf("menu with id %d not found", id)
+		}
+		return 0, fmt.Errorf("failed to update menu: %w", err)
 	}
 	r.logger.Infoln("successful updated menu position, id:", id)
 	return id, nil
