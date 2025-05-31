@@ -29,9 +29,44 @@ function ProductCard({ title, description, price, image }) {
   return (
     <div className="product-card">
       <div
-        className="product-image"
+        className="product-header"
         style={{ backgroundImage: `url(${image})` }}
-      />
+    >
+    {/* rectangle 20 21 22 23 */}
+      <div className="product-rectangle">
+        <p className="pro-rect-title">Главная</p>
+      </div>
+      <div className="product-rectangle"> <p className="pro-rect-title">Профиль</p></div>
+       <div className="product-rectangle"> <p className="pro-rect-title">Корзина</p></div>
+        <div className="product-rectangle"> <p className="pro-rect-title">Контакты</p></div>
+      </div>
+      <div className="product-address-arrow">
+      <div className="product-rectangle18">
+        <h3 className="cityaddress">Федора Попова, 1</h3>
+        <h4 className="deliverytime">Сегодня, 14 апр., 14:00 - 16:30</h4>
+      </div>
+      <div className="product-rectangle19">
+        <button className="arrow19">
+        <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+      </div>
+
+    <div className="product-rectangle3">
+      <div className="search-input-container">
+        <span className="material-icons search-icon">search</span>
+        <input
+          type="text"
+          placeholder="Поиск..."
+          className="search-input"
+        />
+      </div>
+      <button className="menu-button">
+        <span className="material-icons">menu</span>
+      </button>
+    </div>
+
+
       <div className="product-info">
         <div className="product-title">{title}</div>
         <div className="product-description">{description}</div>
