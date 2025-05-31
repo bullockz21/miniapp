@@ -14,7 +14,7 @@
 .product-header {
     width: 100%;
     height: 50px;
-    background: #eee;
+    /* background: #eee; */
     border-radius: 8px;
     margin-bottom: 12px;
     display: flex;
@@ -29,6 +29,10 @@
     height: 48px;
     background: #3fff;
     border-radius: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .pro-rect-title {
@@ -38,7 +42,8 @@
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 9px;
-    padding-top: 22px;
+    padding-top: 10px;
+    margin: 0;
 }
 
 .product-address-arrow {
@@ -81,7 +86,7 @@
 .product-rectangle19 {
     width: 45px;
     height: 56px;
-    background: red;
+    background: rgb(251, 178, 8);
     border-radius: 9px;
     display: flex;
     justify-content: center;
@@ -99,14 +104,24 @@
     width: 328px;
     height: 44px;
     background: #d4cfcf;
-    flex-direction: column;
-    align-items: center;
+    display: flex;
+    flex-direction: row;
+    /* align-items: center;
+    justify-content: center; */
     border-radius: 9px;
     margin-top: 3%;
 }
 
+.search-input-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .search-icon {
-    font-size: 16px;
+    font-size: 24px;
+    margin-left: 5%;
 }
 
 .search-input {
@@ -117,32 +132,95 @@
     font-size: 15px;
     margin-right: 8px;
     flex-grow: 1;
+    color: #9c9c9c;
 }
 
 .menu-button {
     background: transparent;
     border: none;
-    
+    margin-right: 3%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: #242424;
+}
+
+.product-rectangle5 {
+    width: 328px;
+    height: 44px;
+    border-radius: 9px;
+    background: #EBEBEB;
+    margin-top: 4%;
+}
+
+.listFoodElement {
+    display: flex;
+    flex-direction: row;
+    /* padding-top: 4%; */
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #242424;
+    gap: 15px;
+    list-style: none;
+    padding-left: 4%;
+}
+
+.listFoodElement:last-child {
+    overflow-x: hidden;
+}
+
+.checklist-products {
+    display: flex;
+    flex-direction: row;
+}
+
+.product-info {
+    width: 161px;
+    height: 204px;
+    /* background: #D9D9D9; */
+    margin-top: 4%;
+    margin-right: 1.2%;
+}
+
+.product-info p {
+    gap: 2px;
+    margin: 4px 0;
+}
+
+.product-picture {
+    width: 160px;
+    height: 152px;
+    background: #F3F3F3;
+    border-radius: 9px;
 }
 
 .product-title {
-    font-weight: bold;
-    margin-bottom: 4px;
-    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: start;
+    /* background: white; */
 }
 
 .product-description {
-    font-size: 12px;
+    font-size: 15px;
     color: #888;
-    margin-bottom: 8px;
-    text-align: center;
+    margin-bottom: 5%;
+    text-align: start;
+    background: white;
 }
 
 .product-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 3px;
     margin-bottom: 8px;
+       background: #f0f0f0;
+       max-width: 96px;
+       border-radius: 9px;
 }
 
 .product-controls button {
@@ -158,4 +236,15 @@
 .product-price {
     font-weight: bold;
     font-size: 16px;
+}
+
+.order-button {
+    width: 328px;
+    height: 56px;
+    background: #FF6E01;
+    color: white;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    margin-top: 13%;
 }

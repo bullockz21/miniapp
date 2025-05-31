@@ -21,7 +21,11 @@ function ProductCard({ title, description, price, image }) {
 
   const handleOrder = () => {
     if (count > 0) {
+      if (!title) {
+        title = "Описание товара";
+      }
       const orderData = { title, count, price };
+      
       window.Telegram.WebApp.sendData(JSON.stringify(orderData));
     }
   };
@@ -34,11 +38,17 @@ function ProductCard({ title, description, price, image }) {
     >
     {/* rectangle 20 21 22 23 */}
       <div className="product-rectangle">
-        <p className="pro-rect-title">Главная</p>
-      </div>
-      <div className="product-rectangle"> <p className="pro-rect-title">Профиль</p></div>
-       <div className="product-rectangle"> <p className="pro-rect-title">Корзина</p></div>
-        <div className="product-rectangle"> <p className="pro-rect-title">Контакты</p></div>
+      <i class="bi bi-house"></i>
+        <p className="pro-rect-title">Главная</p> </div>
+      <div className="product-rectangle"> 
+      <i class="bi bi-person"></i>
+      <p className="pro-rect-title">Профиль</p></div>
+       <div className="product-rectangle"> 
+       <i class="bi bi-cart"></i>
+       <p className="pro-rect-title">Корзина</p></div>
+        <div className="product-rectangle">
+        <i class="bi bi-telephone"></i>
+         <p className="pro-rect-title">Контакты</p></div>
       </div>
       <div className="product-address-arrow">
       <div className="product-rectangle18">
@@ -57,7 +67,7 @@ function ProductCard({ title, description, price, image }) {
         <span className="material-icons search-icon">search</span>
         <input
           type="text"
-          placeholder="Поиск..."
+          placeholder="Поиск"
           className="search-input"
         />
       </div>
@@ -66,22 +76,56 @@ function ProductCard({ title, description, price, image }) {
       </button>
     </div>
 
+    <div className="product-rectangle5">
+      <div className="product-list-row">
+        <ul className="listFoodElement">
+        <li>Бургеры</li>
+        <li>Пицца</li>
+        <li>Суши</li>
+        <li>Дабстеп</li>
+        <li>Марихуана</li>
+    </ul>
+      </div>
+    </div>
 
+<div className="checklist-products">
       <div className="product-info">
-        <div className="product-title">{title}</div>
-        <div className="product-description">{description}</div>
+      <div className="product-picture"></div>
+        <div className="product-title">{title}
+        <p>Название товара</p></div>
+        <div className="product-description">{description}
+        <p>Описание товара</p>
+        </div>
         <div className="product-controls">
           <button onClick={handleDecrement} disabled={count === 0}>
             -
           </button>
           <span>{count}</span>
+            <div className="product-price">{price} ₽</div>
           <button onClick={handleIncrement}>+</button>
         </div>
-        <div className="product-price">{price} ₽</div>
-        <button className="order-button" onClick={handleOrder} disabled={count === 0}>
-          Заказать
-        </button>
       </div>
+
+            <div className="product-info">
+      <div className="product-picture"></div>
+        <div className="product-title">{title}
+        <p>Название товара</p></div>
+        <div className="product-description">{description}
+        <p>Описание товара</p>
+        </div>
+        <div className="product-controls">
+          <button onClick={handleDecrement} disabled={count === 0}>
+            -
+          </button>
+          <span>{count}</span>
+            <div className="product-price">{price} ₽</div>
+          <button onClick={handleIncrement}>+</button>
+        </div>
+      </div>
+      </div>
+        <button className="order-button" onClick={handleOrder} disabled={count === 0}> 
+         {count} {price} ₽
+        </button> 
     </div>
   );
 }
