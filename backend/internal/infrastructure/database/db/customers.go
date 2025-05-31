@@ -48,7 +48,7 @@ func (r *repository) LoadCustomer(ctx context.Context, tg_id int) (customer dto.
 	return customer, nil
 }
 
-func (r *repository) UpdateCustomer(ctx context.Context, customer dto.CustomerDTO) (id int, err error) {
+func (r *repository) UpdateCustomer(ctx context.Context, customer dto.CustomerDTO, inId int) (id int, err error) {
 	r.logger.Infoln("updating customer, id:", customer.Id)
 	query := `
 			UPDATE customers
@@ -61,7 +61,7 @@ func (r *repository) UpdateCustomer(ctx context.Context, customer dto.CustomerDT
 			RETURNING id
 			`
 	r.logger.Traceln("SQL Query:", formatQuery(query))
-	r.client.QueryRow(ctx, query, customer.Id, customer.Name, customer.PhoneNumber).Scan(&id)
+	r.client.QueryRow(ctx, query, inId, customer.Name, customer.PhoneNumber).Scan(&id)
 	if id == 0 {
 		return id, fmt.Errorf("failed to update customer")
 	}

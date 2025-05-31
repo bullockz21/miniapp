@@ -57,23 +57,22 @@ func (r *repository) LoadOrdersByOrderNum(ctx context.Context, order_num int) (o
 	return orders, nil
 }
 
-func (r *repository) UpdateOrder(ctx context.Context, order dto.OrderDTO) (id int, err error) {
+func (r *repository) UpdateOrder(ctx context.Context, order dto.OrderDTO, inId int) (id int, err error) {
 	r.logger.Infoln("updating customer, id:", order.Id)
 	query := `
 			UPDATE orders
 			SET
-				customer_id,
-				delivery_type_id,
-				menu_id,
-				order_number
-				order_state,
-				order_date
+				customer_id = $2,
+				delivery_type_id = $3,
+				menu_id = $4,
+				order_number = $5,
+				order_state = $6,
+				order_date = $7
 			WHERE id = $1
-			VALUES ($1, $2, $3, $4, $5, $6, $7)
 			RETURNING id
 			`
 	r.logger.Traceln("SQL Query:", formatQuery(query))
-	r.client.QueryRow(ctx, query, order.Id, order.CustomerId, order.DeliveryType, order.MenuId, order.Number, order.Status, order.Date).Scan(&id)
+	r.client.QueryRow(ctx, query, inId, order.CustomerId, order.DeliveryType, order.MenuId, order.Number, order.Status, order.Date).Scan(&id)
 	if id == 0 {
 		return id, fmt.Errorf("failed to update order")
 	}

@@ -9,8 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var sem = make(chan struct{}, 50)
-
 func (h *Handler) GetMenuList(c *gin.Context) {
 	ctx := c.Request.Context()
 	type result struct {

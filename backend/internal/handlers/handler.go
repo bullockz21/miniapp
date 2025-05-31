@@ -15,6 +15,8 @@ type Handler struct {
 	cfg     cfg.Cfg
 }
 
+var sem = make(chan struct{}, 50)
+
 func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
 	return Handler{
 		logger:  logger,
@@ -24,7 +26,9 @@ func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
 }
 
 func (h *Handler) Register(r *gin.Engine) {
+	// Default
 	r.GET("/hello", h.HelloHandler)
+	// User
 	r.GET("/users", h.GetUsersList)
 	r.GET("/users/:id", h.GetUserById)
 	r.POST("/users", h.CreateUser)
@@ -32,12 +36,16 @@ func (h *Handler) Register(r *gin.Engine) {
 	r.PATCH("/users/:id/email", h.UpdateUserEmailById)
 	r.PATCH("/users/:id/role_id", h.UpdateUserRoleIdById)
 	r.DELETE("/users/:id", h.DeleteUserById)
-
+	// Menu
 	r.GET("/menu", h.GetMenuList)
 	r.GET("/menu/:id", h.GetMenuById)
 	r.POST("/menu", h.CreateMenu)
 	r.PATCH("/menu/:id", h.UpdateMenuPosition)
 	r.DELETE("menu/:id", h.DeleteMenuById)
+	// Customer
+	r.GET("/customer/:id", h.GetCustomerById)
+	r.POST("/customer", h.CreateCustomer)
+	r.PATCH("/customer/:id", h.UpdateCustomer)
 }
 
 func (h *Handler) HelloHandler(c *gin.Context) {
