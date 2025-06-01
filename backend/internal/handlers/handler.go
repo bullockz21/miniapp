@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"context"
+	"errors"
 	"miniapp/internal/infrastructure/database/storage"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,8 +17,6 @@ type Handler struct {
 	storage storage.Storage
 	cfg     cfg.Cfg
 }
-
-var sem = make(chan struct{}, 50)
 
 func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
 	return Handler{
@@ -50,4 +51,50 @@ func (h *Handler) Register(r *gin.Engine) {
 
 func (h *Handler) HelloHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, string("Hello World!"))
+}
+
+var sem = make(chan struct{}, 50)
+
+const (
+	semTimeout     = 2 * time.Second
+	requestTimeout = 10 * time.Second
+)
+
+func sendError(c *gin.Context, status int, msg string, err error) {
+	c.JSON(status, gin.H{
+		"error":   msg,
+		"details": err.Error(),
+	})
+}
+
+func sendSuccess(c *gin.Context, status int, data interface{}) {
+	c.JSON(status, gin.H{
+		"status": "OK",
+		"data":   data,
+	})
+}
+
+func handleContextError(c *gin.Context, ctx context.Context) {
+	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+		sendError(c, http.StatusGatewayTimeout, "request timeout", nil)
+	} else {
+		sendError(c, http.StatusRequestTimeout, "request cancelled", nil)
+	}
+}
+
+func checkSemaphore(c *gin.Context, ctx context.Context) bool {
+	select {
+	case sem <- struct{}{}:
+		return true
+	case <-time.After(semTimeout):
+		sendError(c, http.StatusTooManyRequests, "service busy", nil)
+		return false
+	case <-ctx.Done():
+		handleContextError(c, ctx)
+		return false
+	}
+}
+
+func releaseSemaphore() {
+	<-sem
 }
