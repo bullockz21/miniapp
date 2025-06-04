@@ -16,7 +16,7 @@ func (h *Handler) GetOrdersByOrderNum(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		orders, err := h.storage.LoadOrdersByOrderNum(ctx, int(id))
@@ -47,7 +47,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.SaveNewOrder(ctx, newOrder)
@@ -84,7 +84,7 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.UpdateOrder(ctx, UpdateOrder, int(id))

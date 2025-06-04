@@ -15,7 +15,7 @@ func (h *Handler) GetCustomerById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		customer, err := h.storage.LoadCustomer(ctx, int(id))
@@ -46,7 +46,7 @@ func (h *Handler) CreateCustomer(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.SaveNewCustomer(ctx, newCustomer)
@@ -82,7 +82,7 @@ func (h *Handler) UpdateCustomer(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		outId, err := h.storage.UpdateCustomer(ctx, UpdateCustomer, int(id))

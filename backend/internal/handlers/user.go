@@ -11,7 +11,7 @@ import (
 
 func (h *Handler) GetUsersList(c *gin.Context) {
 	ctx := c.Request.Context()
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		users, err := h.storage.LoadAllUsers(ctx)
@@ -41,7 +41,7 @@ func (h *Handler) GetUserById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		user, err := h.storage.LoadUser(ctx, int(id))
@@ -73,12 +73,12 @@ func (h *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 	newUser.PasswordHash, err = user.CreatePasswordHash(newUser.Password)
+	newUser.Password = ""
 	if err != nil {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid hash", err: err})
 		return
 	}
-	newUser.Password = ""
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.SaveNewUser(ctx, newUser)
@@ -91,7 +91,7 @@ func (h *Handler) CreateUser(c *gin.Context) {
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create user", err: res.err})
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error create user", err: res.err})
 			return
 		}
 		sendSuccess(c, http.StatusCreated, res)
@@ -116,11 +116,12 @@ func (h *Handler) UpdateUserPasswordById(c *gin.Context) {
 	}
 	updateUser.Id = int(id)
 	updateUser.PasswordHash, err = user.CreatePasswordHash(updateUser.Password)
+	updateUser.Password = ""
 	if err != nil {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid hash", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		outId, err := h.storage.UpdateUserPassword(ctx, updateUser)
@@ -133,7 +134,7 @@ func (h *Handler) UpdateUserPasswordById(c *gin.Context) {
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update password", err: res.err})
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error update password", err: res.err})
 			return
 		}
 		sendSuccess(c, http.StatusCreated, res)
@@ -157,7 +158,7 @@ func (h *Handler) UpdateUserEmailById(c *gin.Context) {
 		return
 	}
 	updateUser.Id = int(id)
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		outId, err := h.storage.UpdateUserEmail(ctx, updateUser)
@@ -170,7 +171,7 @@ func (h *Handler) UpdateUserEmailById(c *gin.Context) {
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update email", err: res.err})
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error update email", err: res.err})
 			return
 		}
 		sendSuccess(c, http.StatusCreated, res)
@@ -194,7 +195,7 @@ func (h *Handler) UpdateUserRoleIdById(c *gin.Context) {
 		return
 	}
 	updateUser.Id = int(id)
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		outId, err := h.storage.UpdateUserRoleId(ctx, updateUser)
@@ -207,7 +208,7 @@ func (h *Handler) UpdateUserRoleIdById(c *gin.Context) {
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update role", err: res.err})
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error update role", err: res.err})
 			return
 		}
 		sendSuccess(c, http.StatusCreated, res)
@@ -232,7 +233,7 @@ func (h *Handler) DeleteUserById(c *gin.Context) {
 		return
 	}
 	deleteUser.Id = int(id)
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		err := h.storage.DeleteUser(ctx, deleteUser.Id)
@@ -245,7 +246,7 @@ func (h *Handler) DeleteUserById(c *gin.Context) {
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error delete user", err: res.err})
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error delete user", err: res.err})
 			return
 		}
 		sendSuccess(c, http.StatusCreated, Result{data: "User by delete", err: nil})

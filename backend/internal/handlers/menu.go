@@ -10,7 +10,7 @@ import (
 
 func (h *Handler) GetMenuList(c *gin.Context) {
 	ctx := c.Request.Context()
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		menu, err := h.storage.LoadAllMenu(ctx)
@@ -40,7 +40,7 @@ func (h *Handler) GetMenuById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		menu, err := h.storage.LoadMenuPosition(ctx, int(id))
@@ -71,7 +71,7 @@ func (h *Handler) CreateMenu(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.SaveNewMenuPosition(ctx, newMenu)
@@ -107,7 +107,7 @@ func (h *Handler) UpdateMenuPosition(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.UpdateMenuPosition(ctx, updateMenu, int(id))
@@ -137,7 +137,7 @@ func (h *Handler) DeleteMenuById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result, 1)
+	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
 		err = h.storage.DeleteMenuPosition(ctx, int(id))
