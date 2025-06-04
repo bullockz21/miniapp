@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"miniapp/internal/dto"
 	"net/http"
 	"strconv"
@@ -10,188 +9,153 @@ import (
 )
 
 func (h *Handler) GetMenuList(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
-	type result struct {
-		menu []dto.MenuDTO
-		err  error
-	}
-	resultChan := make(chan result, 1)
+	ctx := c.Request.Context()
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		menu, err := h.storage.LoadAllMenu(ctx)
 		select {
-		case resultChan <- result{menu: menu, err: err}:
+		case resultChan <- Result{data: menu, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error get menu", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get menu", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusOK, res.menu)
+		sendSuccess(c, http.StatusOK, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
 
 func (h *Handler) GetMenuById(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
+	ctx := c.Request.Context()
 	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "incorrect id", err)
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	type result struct {
-		menu dto.MenuDTO
-		err  error
-	}
-	resultChan := make(chan result, 1)
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		menu, err := h.storage.LoadMenuPosition(ctx, int(id))
 		select {
-		case resultChan <- result{menu: menu, err: err}:
+		case resultChan <- Result{data: menu, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error get menu position", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get menu position", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusOK, res.menu)
+		sendSuccess(c, http.StatusOK, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
 
 func (h *Handler) CreateMenu(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
+	ctx := c.Request.Context()
 	newMenu := dto.MenuDTO{}
 	err := c.ShouldBindJSON(&newMenu)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "invalid request body", err)
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	type result struct {
-		id  int
-		err error
-	}
-	resultChan := make(chan result, 1)
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.SaveNewMenuPosition(ctx, newMenu)
 		select {
-		case resultChan <- result{id: id, err: err}:
+		case resultChan <- Result{data: id, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
-
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error create menu position", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create menu position", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusCreated, res.id)
+		sendSuccess(c, http.StatusCreated, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
 
 func (h *Handler) UpdateMenuPosition(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
+	ctx := c.Request.Context()
 	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "incorrect id", err)
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
 	updateMenu := dto.MenuDTO{}
 	err = c.ShouldBindJSON(&updateMenu)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "invalid request body", err)
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	type result struct {
-		id  int
-		err error
-	}
-	resultChan := make(chan result, 1)
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.UpdateMenuPosition(ctx, updateMenu, int(id))
 		select {
-		case resultChan <- result{id: id, err: err}:
+		case resultChan <- Result{data: id, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error update menu position", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update menu position", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusCreated, res.id)
+		sendSuccess(c, http.StatusCreated, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
 
 func (h *Handler) DeleteMenuById(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
+	ctx := c.Request.Context()
 	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "incorrect id", err)
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	type result struct {
-		err error
-	}
-	resultChan := make(chan result, 1)
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		err = h.storage.DeleteMenuPosition(ctx, int(id))
 		select {
-		case resultChan <- result{err: err}:
+		case resultChan <- Result{data: nil, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error delete menu position", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error delete menu position", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusCreated, "delete Menu position")
+		sendSuccess(c, http.StatusCreated, Result{data: "delete Menu position", err: nil})
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }

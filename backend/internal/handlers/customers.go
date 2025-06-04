@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"miniapp/internal/dto"
 	"net/http"
 	"strconv"
@@ -10,122 +9,98 @@ import (
 )
 
 func (h *Handler) GetCustomerById(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
+	ctx := c.Request.Context()
 	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "incorrect id", err)
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	type result struct {
-		result dto.CustomerDTO
-		err    error
-	}
-	resultChan := make(chan result, 1)
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		customer, err := h.storage.LoadCustomer(ctx, int(id))
 		select {
-		case resultChan <- result{result: customer, err: err}:
+		case resultChan <- Result{data: customer, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error get menu position", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get menu position", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusOK, res.result)
+		sendSuccess(c, http.StatusOK, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
 
 func (h *Handler) CreateCustomer(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
-	type result struct {
-		id  int
-		err error
-	}
+	ctx := c.Request.Context()
 	newCustomer := dto.CustomerDTO{}
 	err := c.ShouldBindJSON(&newCustomer)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "invalid request body", err)
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan result, 1)
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		id, err := h.storage.SaveNewCustomer(ctx, newCustomer)
 		select {
-		case resultChan <- result{id: id, err: err}:
+		case resultChan <- Result{data: id, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error create customer", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create customer", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusCreated, res.id)
+		sendSuccess(c, http.StatusCreated, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
 
 func (h *Handler) UpdateCustomer(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), requestTimeout)
-	defer cancel()
-	if !checkSemaphore(c, ctx) {
-		return
-	}
-	defer releaseSemaphore()
-
+	ctx := c.Request.Context()
 	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "incorrect id", err)
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
 	UpdateCustomer := dto.CustomerDTO{}
 	err = c.ShouldBindJSON(&UpdateCustomer)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, "invalid request body", err)
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-
-	type result struct {
-		id  int
-		err error
-	}
-	resultChan := make(chan result, 1)
-
+	resultChan := make(chan Result, 1)
 	go func() {
 		defer close(resultChan)
 		outId, err := h.storage.UpdateCustomer(ctx, UpdateCustomer, int(id))
 		select {
-		case resultChan <- result{id: outId, err: err}:
+		case resultChan <- Result{data: outId, err: err}:
 		case <-ctx.Done():
+			return
 		}
 	}()
 	select {
 	case res := <-resultChan:
 		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, "FAIL: error update customer", res.err)
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update customer", err: res.err})
 			return
 		}
-		sendSuccess(c, http.StatusOK, res.id)
+		sendSuccess(c, http.StatusOK, res)
 	case <-ctx.Done():
 		handleContextError(c, ctx)
+		return
 	}
 }
