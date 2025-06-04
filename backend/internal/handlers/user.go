@@ -1,135 +1,256 @@
 package handlers
 
 import (
-	"context"
-	"fmt"
 	"miniapp/internal/domain/user"
 	"miniapp/internal/dto"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) GetUsersList(c *gin.Context) {
-	users, err := h.storage.LoadAllUsers(context.Background())
-	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	ctx := c.Request.Context()
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		users, err := h.storage.LoadAllUsers(ctx)
+		select {
+		case resultChan <- Result{data: users, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error get users list", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusOK, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
 		return
 	}
-	c.JSON(http.StatusOK, users)
 }
 
 func (h *Handler) GetUserById(c *gin.Context) {
-	idStr := c.Params.ByName("id")
-	id := 0
-	fmt.Sscanf(idStr, "%d", &id)
-	user, err := h.storage.LoadUser(context.Background(), id)
+	ctx := c.Request.Context()
+	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		user, err := h.storage.LoadUser(ctx, int(id))
+		select {
+		case resultChan <- Result{data: user, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusBadRequest, Result{data: "FAIL: error get user", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusOK, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
+		return
+	}
 }
 
 func (h *Handler) CreateUser(c *gin.Context) {
+	ctx := c.Request.Context()
 	newUser := dto.UserDTO{}
-	err := c.BindJSON((&newUser))
+	err := c.ShouldBindJSON(&newUser)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
 	newUser.PasswordHash, err = user.CreatePasswordHash(newUser.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "invalid hash", err: err})
 		return
 	}
 	newUser.Password = ""
-	id, err := h.storage.SaveNewUser(context.Background(), newUser)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		id, err := h.storage.SaveNewUser(ctx, newUser)
+		select {
+		case resultChan <- Result{data: id, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create user", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusCreated, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
 		return
 	}
-	c.JSON(http.StatusOK, id)
 }
 
 func (h *Handler) UpdateUserPasswordById(c *gin.Context) {
-	updateUser := dto.UserDTO{}
-	idStr := c.Params.ByName("id")
-	id := 0
-	fmt.Sscanf(idStr, "%d", &id)
-	err := c.BindJSON((&updateUser))
+	ctx := c.Request.Context()
+	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	updateUser.Id = id
+	updateUser := dto.UserDTO{}
+	err = c.ShouldBindJSON(&updateUser)
+	if err != nil {
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
+		return
+	}
+	updateUser.Id = int(id)
 	updateUser.PasswordHash, err = user.CreatePasswordHash(updateUser.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "invalid hash", err: err})
 		return
 	}
-	id, err = h.storage.UpdateUserPassword(context.Background(), updateUser)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		outId, err := h.storage.UpdateUserPassword(ctx, updateUser)
+		select {
+		case resultChan <- Result{data: outId, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update password", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusCreated, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
 		return
 	}
-	c.JSON(http.StatusOK, id)
 }
 
 func (h *Handler) UpdateUserEmailById(c *gin.Context) {
+	ctx := c.Request.Context()
+	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
+		return
+	}
 	updateUser := dto.UserDTO{}
-	idStr := c.Params.ByName("id")
-	id := 0
-	fmt.Sscanf(idStr, "%d", &id)
-	err := c.BindJSON((&updateUser))
-	fmt.Println(updateUser)
+	err = c.ShouldBindJSON((&updateUser))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	updateUser.Id = id
-	id, err = h.storage.UpdateUserEmail(context.Background(), updateUser)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	updateUser.Id = int(id)
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		outId, err := h.storage.UpdateUserEmail(ctx, updateUser)
+		select {
+		case resultChan <- Result{data: outId, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update email", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusCreated, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
 		return
 	}
-	c.JSON(http.StatusOK, id)
 }
 
 func (h *Handler) UpdateUserRoleIdById(c *gin.Context) {
+	ctx := c.Request.Context()
+	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
+		return
+	}
 	updateUser := dto.UserDTO{}
-	idStr := c.Params.ByName("id")
-	id := 0
-	fmt.Sscanf(idStr, "%d", &id)
-	err := c.BindJSON((&updateUser))
+	err = c.ShouldBindJSON((&updateUser))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	updateUser.Id = id
-	id, err = h.storage.UpdateUserRoleId(context.Background(), updateUser)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	updateUser.Id = int(id)
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		outId, err := h.storage.UpdateUserRoleId(ctx, updateUser)
+		select {
+		case resultChan <- Result{data: outId, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update role", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusCreated, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
 		return
 	}
-	c.JSON(http.StatusOK, id)
+
 }
 
 func (h *Handler) DeleteUserById(c *gin.Context) {
+	ctx := c.Request.Context()
+	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
+		return
+	}
 	deleteUser := dto.UserDTO{}
-	idStr := c.Params.ByName("id")
-	id := 0
-	fmt.Sscanf(idStr, "%d", &id)
-	err := c.BindJSON((&deleteUser))
-	deleteUser.Id = id
+	err = c.ShouldBindJSON((&deleteUser))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	err = h.storage.DeleteUser(context.Background(), deleteUser.Id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, string(fmt.Sprintf("%v", err)))
+	deleteUser.Id = int(id)
+	resultChan := make(chan Result, 1)
+	go func() {
+		defer close(resultChan)
+		err := h.storage.DeleteUser(ctx, deleteUser.Id)
+		select {
+		case resultChan <- Result{data: nil, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error delete user", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusCreated, Result{data: "User by delete", err: nil})
+	case <-ctx.Done():
+		handleContextError(c, ctx)
 		return
 	}
-	c.JSON(http.StatusOK, id)
 }
