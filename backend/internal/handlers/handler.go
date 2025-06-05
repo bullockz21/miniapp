@@ -53,6 +53,11 @@ func (h *Handler) Register(r *gin.Engine) {
 	r.GET("/customer/:id", h.TimeoutAndSemoporeMiddleware(), h.GetCustomerById)
 	r.POST("/customer", h.TimeoutAndSemoporeMiddleware(), h.CreateCustomer)
 	r.PATCH("/customer/:id", h.TimeoutAndSemoporeMiddleware(), h.UpdateCustomer)
+	// Orders
+	r.GET("/order/:id", h.TimeoutAndSemoporeMiddleware(), h.GetOrdersByOrderId)
+	r.GET("/order", h.TimeoutAndSemoporeMiddleware(), h.GetAllOrders)
+	r.POST("/order", h.TimeoutAndSemoporeMiddleware(), h.CreateOrder)
+	r.PATCH("/order/:id", h.TimeoutAndSemoporeMiddleware(), h.UpdateOrder)
 }
 
 func (h *Handler) HelloHandler(c *gin.Context) {

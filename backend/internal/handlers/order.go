@@ -8,10 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) GetOrdersByOrderNum(c *gin.Context) {
+func (h *Handler) GetOrdersByOrderId(c *gin.Context) {
 	ctx := c.Request.Context()
-	idStr := c.Params.ByName("id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
+	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
 		return
@@ -39,20 +38,57 @@ func (h *Handler) GetOrdersByOrderNum(c *gin.Context) {
 	}
 }
 
+func (h *Handler) GetAllOrders(c *gin.Context) {
+	ctx := c.Request.Context()
+	resultChan := make(chan Result)
+	go func() {
+		defer close(resultChan)
+		orders, err := h.storage.LoadOrders(ctx)
+		select {
+		case resultChan <- Result{data: orders, err: err}:
+		case <-ctx.Done():
+			return
+		}
+	}()
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get order position", err: res.err})
+			return
+		}
+		sendSuccess(c, http.StatusCreated, res)
+	case <-ctx.Done():
+		handleContextError(c, ctx)
+		return
+	}
+}
+
 func (h *Handler) CreateOrder(c *gin.Context) {
 	ctx := c.Request.Context()
-	newOrder := dto.OrderDTO{}
+	newOrder := []dto.OrderDTO{}
 	err := c.ShouldBindJSON(&newOrder)
 	if err != nil {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
+	type Ord struct {
+		Id    int
+		Count int
+	}
 	resultChan := make(chan Result)
 	go func() {
 		defer close(resultChan)
-		id, err := h.storage.SaveNewOrder(ctx, newOrder)
+		id := 0
+		count := 0
+		for _, order := range newOrder {
+			id, err = h.storage.SaveNewOrder(ctx, order)
+			if err != nil {
+				return
+			}
+			count++
+		}
 		select {
-		case resultChan <- Result{data: id, err: err}:
+		case resultChan <- Result{data: Ord{Id: id, Count: count}, err: err}:
 		case <-ctx.Done():
 			return
 		}

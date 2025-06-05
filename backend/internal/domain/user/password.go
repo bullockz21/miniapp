@@ -14,19 +14,14 @@ const (
 )
 
 func CreatePasswordHash(pwd string) (pwdHash string, err error) {
-
 	err = pwdValidation(pwd)
-
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
-
 	PasswordHash, err := bcrypt.GenerateFromPassword([]byte(pwd), 10)
-
 	if err != nil {
 		return "", fmt.Errorf("failed to create user hash to error: %v", err)
 	}
-
 	return string(PasswordHash), nil
 }
 

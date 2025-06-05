@@ -35,11 +35,40 @@ func (r *repository) LoadOrdersByOrderNum(ctx context.Context, order_num int) (o
 			customer_id,
 			delivery_type_id,
 			menu_id,
-			order_number
-			order_state,
+			order_number,
+			order_state_id,
 			order_date
-		FROM customers 
-		WHERE id = $1
+		FROM orders 
+		WHERE order_number = $1
+		`
+	r.logger.Traceln("SQL Query:", formatQuery(query))
+	rows, err := r.client.Query(ctx, query, order_num)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		tempOrder := dto.OrderDTO{}
+		err = rows.Scan(&tempOrder.Id, &tempOrder.CustomerId, &tempOrder.DeliveryType, &tempOrder.MenuId, &tempOrder.Number, &tempOrder.Status, &tempOrder.Date)
+		if err != nil {
+			return nil, err
+		}
+		orders = append(orders, tempOrder)
+	}
+	return orders, nil
+}
+
+func (r *repository) LoadOrders(ctx context.Context) (orders []dto.OrderDTO, err error) {
+	r.logger.Infoln("loading all orders")
+	query := ` 
+		SELECT 
+			id,
+			customer_id,
+			delivery_type_id,
+			menu_id,
+			order_number,
+			order_state_id,
+			order_date
+		FROM orders 
 		`
 	r.logger.Traceln("SQL Query:", formatQuery(query))
 	rows, err := r.client.Query(ctx, query)

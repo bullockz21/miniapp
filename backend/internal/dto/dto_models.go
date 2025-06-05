@@ -3,12 +3,12 @@ package dto
 import "time"
 
 type CustomerDTO struct {
-	Id          int      `json:"customer_id"`
-	TgId        string   `json:"customer_telegram_id"`
-	Name        string   `json:"customer_name"`
-	Address     []string `json:"customer_address"`
-	PhoneNumber string   `json:"phone_number"`
-	CreatedAt   string   `json:"created_at"`
+	Id          int       `json:"customer_id"`
+	TgId        string    `json:"customer_telegram_id"`
+	Name        string    `json:"customer_name"`
+	Address     []string  `json:"customer_address"`
+	PhoneNumber string    `json:"phone_number"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type UserDTO struct {
@@ -45,11 +45,11 @@ type MenuDTO struct {
 // order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 type OrderDTO struct {
-	Id           int    `json:"id"`
-	CustomerId   int    `json:"customer_id"`
-	MenuId       int    `json:"menu_id"`
-	DeliveryType int    `json:"delivery_type_id"`
-	Number       int    `json:"order_num"`
-	Status       int    `json:"order_state_id"`
-	Date         string `json:"order_date"`
+	Id           int       `json:"id"`
+	CustomerId   int       `json:"customer_id"`
+	MenuId       int       `json:"menu_id"`
+	DeliveryType int       `json:"delivery_type_id"`
+	Number       int       `json:"order_num"`
+	Status       int       `json:"order_state_id"`
+	Date         time.Time `json:"order_date"`
 }
