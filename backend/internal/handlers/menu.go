@@ -10,27 +10,13 @@ import (
 
 func (h *Handler) GetMenuList(c *gin.Context) {
 	ctx := c.Request.Context()
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		menu, err := h.storage.LoadAllMenu(ctx)
-		select {
-		case resultChan <- Result{data: menu, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get menu", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusOK, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	menu, err := h.storage.LoadAllMenu(ctx)
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get menu", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusOK, Result{data: menu, err: nil})
+
 }
 
 func (h *Handler) GetMenuById(c *gin.Context) {
@@ -40,27 +26,12 @@ func (h *Handler) GetMenuById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		menu, err := h.storage.LoadMenuPosition(ctx, int(id))
-		select {
-		case resultChan <- Result{data: menu, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get menu position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusOK, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	menu, err := h.storage.LoadMenuPosition(ctx, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get by id menu", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusOK, Result{data: menu, err: nil})
 }
 
 func (h *Handler) CreateMenu(c *gin.Context) {
@@ -71,27 +42,12 @@ func (h *Handler) CreateMenu(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		id, err := h.storage.SaveNewMenuPosition(ctx, newMenu)
-		select {
-		case resultChan <- Result{data: id, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create menu position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	id, err := h.storage.SaveNewMenuPosition(ctx, newMenu)
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error create menu", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusOK, Result{data: id, err: nil})
 }
 
 func (h *Handler) UpdateMenuPosition(c *gin.Context) {
@@ -107,27 +63,12 @@ func (h *Handler) UpdateMenuPosition(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		id, err := h.storage.UpdateMenuPosition(ctx, updateMenu, int(id))
-		select {
-		case resultChan <- Result{data: id, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update menu position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	outId, err := h.storage.UpdateMenuPosition(ctx, updateMenu, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error update menu", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusOK, Result{data: outId, err: nil})
 }
 
 func (h *Handler) DeleteMenuById(c *gin.Context) {
@@ -137,25 +78,10 @@ func (h *Handler) DeleteMenuById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		err = h.storage.DeleteMenuPosition(ctx, int(id))
-		select {
-		case resultChan <- Result{data: nil, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error delete menu position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, Result{data: "delete Menu position", err: nil})
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	err = h.storage.DeleteMenuPosition(ctx, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error delete menu", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusOK, Result{data: "Position by DELETE", err: nil})
 }

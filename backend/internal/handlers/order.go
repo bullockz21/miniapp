@@ -15,52 +15,24 @@ func (h *Handler) GetOrdersByOrderId(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		orders, err := h.storage.LoadOrdersByOrderNum(ctx, int(id))
-		select {
-		case resultChan <- Result{data: orders, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get order position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	orders, err := h.storage.LoadOrdersByOrderNum(ctx, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get order position", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusCreated, Result{data: orders, err: nil})
 }
 
 func (h *Handler) GetAllOrders(c *gin.Context) {
 	ctx := c.Request.Context()
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		orders, err := h.storage.LoadOrders(ctx)
-		select {
-		case resultChan <- Result{data: orders, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get order position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+
+	orders, err := h.storage.LoadOrders(ctx)
+
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get all order", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusCreated, Result{data: orders, err: nil})
 }
 
 func (h *Handler) CreateOrder(c *gin.Context) {
@@ -75,35 +47,22 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		Id    int
 		Count int
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		id := 0
-		count := 0
-		for _, order := range newOrder {
-			id, err = h.storage.SaveNewOrder(ctx, order)
-			if err != nil {
-				return
-			}
-			count++
-		}
-		select {
-		case resultChan <- Result{data: Ord{Id: id, Count: count}, err: err}:
-		case <-ctx.Done():
+
+	id := 0
+	count := 0
+	for _, order := range newOrder {
+		id, err = h.storage.SaveNewOrder(ctx, order)
+		if err != nil {
 			return
 		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create order position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+		count++
+	}
+
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error create order", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusCreated, Result{data: Ord{Id: id, Count: count}, err: nil})
 }
 
 func (h *Handler) UpdateOrder(c *gin.Context) {
@@ -120,25 +79,10 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		id, err := h.storage.UpdateOrder(ctx, UpdateOrder, int(id))
-		select {
-		case resultChan <- Result{data: id, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update order position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	outId, err := h.storage.UpdateOrder(ctx, UpdateOrder, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error update order", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusCreated, Result{data: outId, err: nil})
 }

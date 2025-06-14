@@ -15,27 +15,11 @@ func (h *Handler) GetCustomerById(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		customer, err := h.storage.LoadCustomer(ctx, int(id))
-		select {
-		case resultChan <- Result{data: customer, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error get menu position", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusOK, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
-		return
+	customer, err := h.storage.LoadCustomer(ctx, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get menu position", err: err})
 	}
+	sendSuccess(c, http.StatusOK, Result{data: customer, err: err})
 }
 
 func (h *Handler) CreateCustomer(c *gin.Context) {
@@ -46,27 +30,12 @@ func (h *Handler) CreateCustomer(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		id, err := h.storage.SaveNewCustomer(ctx, newCustomer)
-		select {
-		case resultChan <- Result{data: id, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error create customer", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusCreated, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	id, err := h.storage.SaveNewCustomer(ctx, newCustomer)
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error create customer", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusCreated, Result{data: id, err: nil})
 }
 
 func (h *Handler) UpdateCustomer(c *gin.Context) {
@@ -82,25 +51,10 @@ func (h *Handler) UpdateCustomer(c *gin.Context) {
 		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	resultChan := make(chan Result)
-	go func() {
-		defer close(resultChan)
-		outId, err := h.storage.UpdateCustomer(ctx, UpdateCustomer, int(id))
-		select {
-		case resultChan <- Result{data: outId, err: err}:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	select {
-	case res := <-resultChan:
-		if res.err != nil {
-			sendError(c, http.StatusInternalServerError, Result{data: "FAIL: error update customer", err: res.err})
-			return
-		}
-		sendSuccess(c, http.StatusOK, res)
-	case <-ctx.Done():
-		handleContextError(c, ctx)
+	outId, err := h.storage.UpdateCustomer(ctx, UpdateCustomer, int(id))
+	if err != nil {
+		sendError(c, http.StatusNotFound, Result{data: "FAIL: error update customer", err: err})
 		return
 	}
+	sendSuccess(c, http.StatusCreated, Result{data: outId, err: nil})
 }
