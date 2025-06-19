@@ -2,15 +2,6 @@ package dto
 
 import "time"
 
-type CustomerDTO struct {
-	Id          int       `json:"customer_id"`
-	TgId        string    `json:"customer_telegram_id"`
-	Name        string    `json:"customer_name"`
-	Address     []string  `json:"customer_address"`
-	PhoneNumber string    `json:"phone_number"`
-	CreatedAt   time.Time `json:"created_at"`
-}
-
 type UserDTO struct {
 	Id           int       `json:"id"`
 	UserName     string    `json:"user_name"`

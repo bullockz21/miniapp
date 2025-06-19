@@ -55,8 +55,7 @@ func (r *repository) UpdateCustomer(ctx context.Context, customer dto.CustomerDT
 			SET
 				tg_name = $2,
 				phone_number = $3
-
-			WHERER id = $1
+			WHERE id = $1
 			VALUES ($1, $2, $3)
 			RETURNING id
 			`

@@ -12,15 +12,15 @@ func (h *Handler) GetOrdersByOrderId(c *gin.Context) {
 	ctx := c.Request.Context()
 	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
+		SendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
 		return
 	}
 	orders, err := h.storage.LoadOrdersByOrderNum(ctx, int(id))
 	if err != nil {
-		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get order position", err: err})
+		SendError(c, http.StatusNotFound, Result{data: "FAIL: error get order position", err: err})
 		return
 	}
-	sendSuccess(c, http.StatusCreated, Result{data: orders, err: nil})
+	SendSuccess(c, http.StatusCreated, Result{data: orders, err: nil})
 }
 
 func (h *Handler) GetAllOrders(c *gin.Context) {
@@ -29,10 +29,10 @@ func (h *Handler) GetAllOrders(c *gin.Context) {
 	orders, err := h.storage.LoadOrders(ctx)
 
 	if err != nil {
-		sendError(c, http.StatusNotFound, Result{data: "FAIL: error get all order", err: err})
+		SendError(c, http.StatusNotFound, Result{data: "FAIL: error get all order", err: err})
 		return
 	}
-	sendSuccess(c, http.StatusCreated, Result{data: orders, err: nil})
+	SendSuccess(c, http.StatusCreated, Result{data: orders, err: nil})
 }
 
 func (h *Handler) CreateOrder(c *gin.Context) {
@@ -40,7 +40,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 	newOrder := []dto.OrderDTO{}
 	err := c.ShouldBindJSON(&newOrder)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
+		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
 	type Ord struct {
@@ -59,10 +59,10 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 	}
 
 	if err != nil {
-		sendError(c, http.StatusNotFound, Result{data: "FAIL: error create order", err: err})
+		SendError(c, http.StatusNotFound, Result{data: "FAIL: error create order", err: err})
 		return
 	}
-	sendSuccess(c, http.StatusCreated, Result{data: Ord{Id: id, Count: count}, err: nil})
+	SendSuccess(c, http.StatusCreated, Result{data: Ord{Id: id, Count: count}, err: nil})
 }
 
 func (h *Handler) UpdateOrder(c *gin.Context) {
@@ -70,19 +70,19 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 	idStr := c.Params.ByName("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
+		SendError(c, http.StatusBadRequest, Result{data: "invalid id", err: err})
 		return
 	}
 	UpdateOrder := dto.OrderDTO{}
 	err = c.ShouldBindJSON(&UpdateOrder)
 	if err != nil {
-		sendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
+		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
 	outId, err := h.storage.UpdateOrder(ctx, UpdateOrder, int(id))
 	if err != nil {
-		sendError(c, http.StatusNotFound, Result{data: "FAIL: error update order", err: err})
+		SendError(c, http.StatusNotFound, Result{data: "FAIL: error update order", err: err})
 		return
 	}
-	sendSuccess(c, http.StatusCreated, Result{data: outId, err: nil})
+	SendSuccess(c, http.StatusCreated, Result{data: outId, err: nil})
 }

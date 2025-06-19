@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -26,6 +28,7 @@ func NewHandler(logger *logger.Logger, storage storage.Storage) Handler {
 }
 
 func (h *Handler) Register(r *gin.Engine) {
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Default
 	r.GET("/hello", h.TimeoutAndSemoporeMiddleware(), h.HelloHandler)
 	// User

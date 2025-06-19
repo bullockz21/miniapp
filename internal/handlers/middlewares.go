@@ -32,7 +32,7 @@ func (h *Handler) checkSemaphore(c *gin.Context, ctx context.Context) bool {
 	case h.sem <- struct{}{}:
 		return true
 	case <-time.After(semTimeout):
-		sendError(c, http.StatusTooManyRequests, Result{data: "service busy", err: nil})
+		SendError(c, http.StatusTooManyRequests, Result{data: "service busy", err: nil})
 		return false
 	case <-ctx.Done():
 		handleContextError(c, ctx)

@@ -8,10 +8,19 @@ import (
 	"miniapp/pkg/logger"
 	"miniapp/pkg/postgresql"
 
+	"miniapp/docs"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	docs.SwaggerInfo.Title = "Eda app API"
+	docs.SwaggerInfo.Description = "Eda app API server"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "127.0.0.1:8080"
+	docs.SwaggerInfo.BasePath = "/"
+
 	logger := logger.GetLogger()
 	cfg := cfg.GetConfigEnv()
 	logger.Infoln("Connecting postgresql")
