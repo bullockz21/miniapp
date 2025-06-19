@@ -46,4 +46,4 @@ test:
 	echo "oops"
 
 clean:
-	rm $(EXEC)
+	rm -rf $(EXEC)

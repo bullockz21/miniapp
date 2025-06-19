@@ -2,24 +2,46 @@ package dto
 
 import "time"
 
-type CustomerDTO struct {
+// id SERIAL PRIMARY KEY,
+// tg_name VARCHAR(100) UNIQUE NOT NULL,
+// tg_id INT UNIQUE NOT NULL,
+// phone_number VARCHAR(50),
+// created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+type WebCreateCustomerDTO struct {
+	TgId string `json:"customer_telegram_id"`
+	Name string `json:"customer_name"`
+}
+
+type WebLoadCustomerDTO struct {
 	Id          int       `json:"customer_id"`
 	TgId        string    `json:"customer_telegram_id"`
 	Name        string    `json:"customer_name"`
-	Address     []string  `json:"customer_address"`
-	PhoneNumber string    `json:"phone_number"`
-	CreatedAt   time.Time `json:"created_at"`
+	PhoneNumber string    `json:"customer_phone_number"`
+	CreatedAt   time.Time `json:"customer_created_at"`
 }
 
 type WebUpdateCustomerDTO struct {
-	TgId        string `json:"customer_telegram_id"`
-	PhoneNumber string `json:"phone_number"`
+	Id          int    `json:"customer_id"`
+	Name        string `json:"customer_name"`
+	PhoneNumber string `json:"customer_phone_number"`
 }
 
-type WebCreateMenuDTO struct {
-	Id          int     `json:"id"`
-	Name        string  `json:"name"`
-	Category    int     `json:"type_id"`
-	Price       float64 `json:"price"`
-	Description string  `json:"description"`
+type DBCreateCustomerDTO struct {
+	TgId string `json:"customer_telegram_id"`
+	Name string `json:"customer_name"`
+}
+
+type DBUpdateCustomerDTO struct {
+	Id          int    `json:"customer_id"`
+	Name        string `json:"customer_name"`
+	PhoneNumber string `json:"customer_phone_number"`
+}
+
+type DBLoadCustomerDTO struct {
+	Id          int       `json:"customer_id"`
+	TgId        string    `json:"customer_telegram_id"`
+	Name        string    `json:"customer_name"`
+	PhoneNumber string    `json:"customer_phone_number"`
+	CreatedAt   time.Time `json:"customer_created_at"`
 }

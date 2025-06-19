@@ -1,52 +1,31 @@
 definitions:
-  dto.CustomerDTO:
+  dto.WebCreateCustomerDTO:
     properties:
-      created_at:
-        type: string
-      customer_address:
-        items:
-          type: string
-        type: array
-      customer_id:
-        type: integer
       customer_name:
         type: string
       customer_telegram_id:
         type: string
-      phone_number:
-        type: string
     type: object
-  dto.MenuDTO:
+  dto.WebLoadCustomerDTO:
     properties:
-      description:
+      customer_created_at:
         type: string
-      id:
+      customer_id:
         type: integer
-      name:
+      customer_name:
         type: string
-      price:
-        type: number
-      type_id:
-        type: integer
-    type: object
-  dto.WebCreateMenuDTO:
-    properties:
-      description:
+      customer_phone_number:
         type: string
-      id:
-        type: integer
-      name:
+      customer_telegram_id:
         type: string
-      price:
-        type: number
-      type_id:
-        type: integer
     type: object
   dto.WebUpdateCustomerDTO:
     properties:
-      customer_telegram_id:
+      customer_id:
+        type: integer
+      customer_name:
         type: string
-      phone_number:
+      customer_phone_number:
         type: string
     type: object
   handlers.Error:
@@ -73,7 +52,63 @@ definitions:
 info:
   contact: {}
 paths:
-  /customer/:id:
+  /customer:
+    post:
+      consumes:
+      - application/json
+      description: Create customer
+      parameters:
+      - description: Customer create data
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.WebCreateCustomerDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Success'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Create customer
+      tags:
+      - customer
+  /customer/{id}:
+    get:
+      description: Get customers data by id
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.WebLoadCustomerDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Get Customer
+      tags:
+      - customer
     patch:
       consumes:
       - application/json
@@ -108,200 +143,4 @@ paths:
       summary: Update customer
       tags:
       - customer
-  /customers:
-    post:
-      consumes:
-      - application/json
-      description: Create customer
-      parameters:
-      - description: Customer create data
-        in: body
-        name: account
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CustomerDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.Success'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Create customer
-      tags:
-      - customer
-  /customers/:id:
-    get:
-      description: Get customers data by id
-      parameters:
-      - description: Customer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.CustomerDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Get Customer
-      tags:
-      - customer
-  /menu:
-    get:
-      description: Get menu list
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/dto.MenuDTO'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Get menu list
-      tags:
-      - menu
-    post:
-      consumes:
-      - application/json
-      description: Create Menu position
-      parameters:
-      - description: Menu position data
-        in: body
-        name: account
-        required: true
-        schema:
-          $ref: '#/definitions/dto.WebCreateMenuDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.MenuDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Create Menu position
-      tags:
-      - menu
-  /menu/:id:
-    delete:
-      description: Delete menu position by ID
-      parameters:
-      - description: Menu position ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.Success'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Delete menu position
-      tags:
-      - menu
-    get:
-      description: Get menu position by id
-      parameters:
-      - description: Menu ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.MenuDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Get menu position
-      tags:
-      - menu
-    patch:
-      consumes:
-      - application/json
-      description: Update menu position by ID
-      parameters:
-      - description: Menu position ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Menu position data
-        in: body
-        name: account
-        required: true
-        schema:
-          $ref: '#/definitions/dto.WebCreateMenuDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.MenuDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Update menu position
-      tags:
-      - menu
 swagger: "2.0"

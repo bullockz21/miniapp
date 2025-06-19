@@ -4,6 +4,7 @@ import (
 	"context"
 	"miniapp/internal/handlers"
 	"miniapp/internal/infrastructure/database/db"
+	"miniapp/internal/service/service_repository"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
 	"miniapp/pkg/postgresql"
@@ -29,9 +30,19 @@ func main() {
 		logger.Fatalf("%v", err)
 	}
 	logger.Infof("Postgresql is connected on %s:%s", cfg.Postgresql.Host, cfg.Postgresql.Port)
-	repository := db.NewRepository(psqlClient, logger)
-	r := gin.Default()
-	handler := handlers.NewHandler(logger, repository)
+	err = psqlClient.Ping(context.Background())
+	if err != nil {
+		logger.Fatalln(err)
+	}
+	logger.Infoln("database pinged OK")
+
+	storage := db.NewRepository(psqlClient, logger)
+
+	r := gin.New()
+
+	service := service_repository.NewServiceRepository(storage)
+
+	handler := handlers.NewHandler(logger, service)
 	handler.Register(r)
 	r.Run(":8080")
 }
