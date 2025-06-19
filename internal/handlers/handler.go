@@ -3,7 +3,6 @@ package handlers
 import (
 	"miniapp/internal/handlers/handler_repository"
 	"miniapp/internal/service/customer/customer_repository"
-	"miniapp/internal/service/service_repository"
 	"miniapp/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -16,10 +15,10 @@ type Handler struct {
 	customerService customer_repository.Customer
 }
 
-func NewHandler(logger *logger.Logger, service service_repository.Service_repo) handler_repository.Handler {
+func NewHandler(logger *logger.Logger, c customer_repository.Customer) handler_repository.Handler {
 	return &Handler{
 		logger:          logger,
-		customerService: service.CustomerRepo,
+		customerService: c,
 	}
 }
 
