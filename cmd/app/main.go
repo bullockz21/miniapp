@@ -4,7 +4,6 @@ import (
 	"context"
 	"miniapp/internal/handlers"
 	"miniapp/internal/infrastructure/database/db"
-	"miniapp/internal/service"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
 	"miniapp/pkg/postgresql"
@@ -38,11 +37,9 @@ func main() {
 
 	storage := db.NewRepository(psqlClient, logger)
 
-	custServ := service.NewCustomerService(storage)
-
 	r := gin.New()
 
-	handler := handlers.NewHandler(logger, custServ)
+	handler := handlers.NewHandler(logger, storage)
 	handler.Register(r)
 	r.Run(":8080")
 }

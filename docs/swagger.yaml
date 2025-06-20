@@ -4,7 +4,7 @@ definitions:
       customer_name:
         type: string
       customer_telegram_id:
-        type: string
+        type: integer
     type: object
   dto.WebLoadCustomerDTO:
     properties:
@@ -17,7 +17,7 @@ definitions:
       customer_phone_number:
         type: string
       customer_telegram_id:
-        type: string
+        type: integer
     type: object
   dto.WebUpdateCustomerDTO:
     properties:
@@ -53,6 +53,28 @@ info:
   contact: {}
 paths:
   /customer:
+    get:
+      description: Get list of all customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.WebLoadCustomerDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Get Customer List
+      tags:
+      - customer
     post:
       consumes:
       - application/json
@@ -82,6 +104,36 @@ paths:
       summary: Create customer
       tags:
       - customer
+  /customer/:
+    patch:
+      consumes:
+      - application/json
+      description: Update customer by ID
+      parameters:
+      - description: Customer update data
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.WebUpdateCustomerDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Success'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Update customer
+      tags:
+      - customer
   /customer/{id}:
     get:
       description: Get customers data by id
@@ -107,40 +159,6 @@ paths:
           schema:
             $ref: '#/definitions/handlers.Error'
       summary: Get Customer
-      tags:
-      - customer
-    patch:
-      consumes:
-      - application/json
-      description: Update customer by ID
-      parameters:
-      - description: Customer ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Customer create data
-        in: body
-        name: account
-        required: true
-        schema:
-          $ref: '#/definitions/dto.WebUpdateCustomerDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.Success'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.Error'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.Error'
-      summary: Update customer
       tags:
       - customer
 swagger: "2.0"

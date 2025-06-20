@@ -7,14 +7,14 @@ import (
 )
 
 func (r *repository) CreateNewCustomer(ctx context.Context, newCustomer dto.DBCreateCustomerDTO) (id int, err error) {
-	r.logger.Infoln("saving new customer in db")
+	// r.logger.Infoln("saving new customer in db")
 	query := `
 			INSERT INTO customers (
 				tg_name,
 				tg_id,
 				phone_number
 			)
-			VALUES ($1, $2, $3)
+			VALUES ($1, $2, 'none')
 			RETURNING id
 			`
 	r.logger.Traceln("SQL Query:", formatQuery(query))
@@ -36,7 +36,7 @@ func (r *repository) LoadCustomer(ctx context.Context, id int) (customer dto.DBL
 			phone_number, 
 			created_at
 		FROM customers 
-		WHERE tg_id = $1
+		WHERE id = $1
 	`
 	// r.logger.Traceln("SQL Query:", formatQuery(query))
 	row := r.client.QueryRow(ctx, query, id)
@@ -70,7 +70,7 @@ func (r *repository) LoadCustomerList(ctx context.Context) ([]dto.DBLoadCustomer
 	for rows.Next() {
 		tempCustomer := dto.DBLoadCustomerDTO{}
 
-		err = rows.Scan(&tempCustomer.Id, &tempCustomer.Id, &tempCustomer.Name, &tempCustomer.TgId, &tempCustomer.PhoneNumber, &tempCustomer.CreatedAt)
+		err = rows.Scan(&tempCustomer.Id, &tempCustomer.Name, &tempCustomer.TgId, &tempCustomer.PhoneNumber, &tempCustomer.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -82,14 +82,12 @@ func (r *repository) LoadCustomerList(ctx context.Context) ([]dto.DBLoadCustomer
 }
 
 func (r *repository) UpdateCustomer(ctx context.Context, customer dto.DBUpdateCustomerDTO) (id int, err error) {
-	// r.logger.Infoln("updating customer, id:", customer.Id)
 	query := `
 			UPDATE customers
 			SET
 				tg_name = $2,
 				phone_number = $3
 			WHERE id = $1
-			VALUES ($1, $2, $3)
 			RETURNING id
 			`
 	// r.logger.Traceln("SQL Query:", formatQuery(query))

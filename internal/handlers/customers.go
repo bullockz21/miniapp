@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"miniapp/internal/dto"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,21 +23,39 @@ func (h *Handler) GetCustomerById(c *gin.Context) {
 
 	idStr := c.Params.ByName("id")
 	id := 0
-	_, err := fmt.Scanf(idStr, "%d", &id)
+	_, err := fmt.Sscanf(idStr, "%d", &id)
 
-	c.JSON(http.StatusOK, gin.H{
-		"err": err,
-		"id":  id,
-	})
+	if err != nil {
+		SendError(c, http.StatusNotFound, Result{data: "incorrect id", err: err})
+		return
+	}
+	customer, err := h.customer.Load(id)
+	if err != nil {
+		SendError(c, http.StatusNotFound, Result{data: "FAIL: error get customer", err: err})
+		return
+	}
+	c.JSON(http.StatusOK, customer)
+	// SendSuccess(c, http.StatusOK, Result{data: customer, err: err})
+}
 
-	// if err != nil {
-	// 	SendError(c, http.StatusNotFound, Result{data: "incorrect id", err: err})
-	// }
-	// customer, err := h.customerService.Load(id)
-	// if err != nil {
-	// 	SendError(c, http.StatusNotFound, Result{data: "FAIL: error get menu position", err: err})
-	// }
-	// c.JSON(http.StatusOK, customer)
+// GetCustomerList godoc
+//
+//	@Summary		Get Customer List
+//	@Description	Get list of all customers
+//	@Tags			customer
+//	@Produce		json
+//	@Success		200	{object}	[]dto.WebLoadCustomerDTO
+//	@Failure		400	{object}	handlers.Error
+//	@Failure		401	{object}	handlers.Error
+//	@Router			/customer [get]
+func (h *Handler) GetCustomerList(c *gin.Context) {
+
+	customers, err := h.customer.LoadList()
+	if err != nil {
+		SendError(c, http.StatusNotFound, Result{data: "FAIL: error get customer list", err: err})
+		return
+	}
+	c.JSON(http.StatusOK, customers)
 	// SendSuccess(c, http.StatusOK, Result{data: customer, err: err})
 }
 
@@ -61,7 +78,7 @@ func (h *Handler) CreateCustomer(c *gin.Context) {
 		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	id, err := h.customerService.Create(newCustomer)
+	id, err := h.customer.Create(newCustomer)
 	if err != nil {
 		SendError(c, http.StatusNotFound, Result{data: "FAIL: error create customer", err: err})
 		return
@@ -76,26 +93,20 @@ func (h *Handler) CreateCustomer(c *gin.Context) {
 //	@Tags			customer
 //	@Accept			json
 //	@Produce		json
-//	@Param			id		path		int							true	"Customer ID"
-//	@Param			account	body		dto.WebUpdateCustomerDTO	true	"Customer create data"
+//	@Param			account	body		dto.WebUpdateCustomerDTO	true	"Customer update data"
 //	@Success		200		{object}	handlers.Success
 //	@Failure		400		{object}	handlers.Error
 //	@Failure		401		{object}	handlers.Error
-//	@Router			/customer/{id} [patch]
+//	@Router			/customer/ [patch]
 func (h *Handler) UpdateCustomer(c *gin.Context) {
-	id, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
-	if err != nil {
-		SendError(c, http.StatusBadRequest, Result{data: "incorrect id", err: err})
-		return
-	}
+
 	UpdateCustomer := dto.WebUpdateCustomerDTO{}
-	err = c.ShouldBindJSON(&UpdateCustomer)
+	err := c.ShouldBindJSON(&UpdateCustomer)
 	if err != nil {
 		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	UpdateCustomer.Id = int(id)
-	outId, err := h.customerService.Update(UpdateCustomer)
+	outId, err := h.customer.Update(UpdateCustomer)
 	if err != nil {
 		SendError(c, http.StatusNotFound, Result{data: "FAIL: error update customer", err: err})
 		return
