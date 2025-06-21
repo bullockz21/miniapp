@@ -2,8 +2,11 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"miniapp/internal/dto"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 func (r *repository) CreateNewCustomer(ctx context.Context, newCustomer dto.DBCreateCustomerDTO) (id int, err error) {
@@ -18,10 +21,16 @@ func (r *repository) CreateNewCustomer(ctx context.Context, newCustomer dto.DBCr
 			RETURNING id
 			`
 	// r.logger.Traceln("SQL Query:", formatQuery(query))
-	r.client.QueryRow(ctx, query, newCustomer.Name, newCustomer.TgId).Scan(&id)
-	if id == 0 {
-		return id, fmt.Errorf("failed to create customer")
+	err = r.client.QueryRow(ctx, query, newCustomer.Name, newCustomer.TgId).Scan(&id)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			return id, fmt.Errorf("code: %s, err: %s", pgErr.Code, pgErr.Message)
+		}
 	}
+	// if id == 0 {
+	// return id, fmt.Errorf("failed to create customer")
+	// }
 	// r.logger.Infoln("customer saved with id:", id)
 	return id, nil
 }

@@ -80,7 +80,7 @@ func (h *Handler) CreateCustomer(c *gin.Context) {
 	}
 	id, err := h.customer.Create(newCustomer)
 	if err != nil {
-		SendError(c, http.StatusNotFound, Result{data: "FAIL: error create customer", err: err})
+		SendError(c, http.StatusBadRequest, Result{data: "FAIL: error create customer", err: err})
 		return
 	}
 	SendSuccess(c, http.StatusCreated, Result{data: id, err: nil})
