@@ -2,11 +2,16 @@ package main
 
 import (
 	"context"
+	"log"
 	"miniapp/internal/handlers"
 	"miniapp/internal/infrastructure/database/db"
+	"miniapp/internal/service/service_repository"
 	"miniapp/pkg/cfg"
 	"miniapp/pkg/logger"
 	"miniapp/pkg/postgresql"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"miniapp/docs"
 
@@ -39,7 +44,20 @@ func main() {
 
 	r := gin.New()
 
-	handler := handlers.NewHandler(logger, storage)
+	service := service_repository.NewServiceRepository(storage)
+
+	handler := handlers.NewHandler(logger, service)
 	handler.Register(r)
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		<-sigChan
+		log.Println("\nInterrupt signal received. Exiting...")
+		psqlClient.Close()
+		os.Exit(0)
+	}()
+
 	r.Run(":8080")
 }

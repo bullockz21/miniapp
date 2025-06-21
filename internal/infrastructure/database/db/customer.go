@@ -17,7 +17,7 @@ func (r *repository) CreateNewCustomer(ctx context.Context, newCustomer dto.DBCr
 			VALUES ($1, $2, 'none')
 			RETURNING id
 			`
-	r.logger.Traceln("SQL Query:", formatQuery(query))
+	// r.logger.Traceln("SQL Query:", formatQuery(query))
 	r.client.QueryRow(ctx, query, newCustomer.Name, newCustomer.TgId).Scan(&id)
 	if id == 0 {
 		return id, fmt.Errorf("failed to create customer")

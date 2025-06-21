@@ -10,8 +10,8 @@ type Service_repo struct {
 	CustomerRepo customer_repository.Customer
 }
 
-func NewServiceRepository(r storage.Storage) Service_repo {
+func NewServiceRepository(s storage.Storage) Service_repo {
 	return Service_repo{
-		CustomerRepo: service.NewCustomerService(r),
+		CustomerRepo: service.NewCustomerService(s),
 	}
 }
