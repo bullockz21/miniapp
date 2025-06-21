@@ -1,4 +1,11 @@
 definitions:
+  dto.AuthDTO:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
   dto.WebCreateCustomerDTO:
     properties:
       customer_name:
@@ -52,6 +59,36 @@ definitions:
 info:
   contact: {}
 paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Authentification by login and password
+      parameters:
+      - description: Auth data
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Success'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Authentification
+      tags:
+      - Authentification
   /customer:
     get:
       description: Get list of all customers

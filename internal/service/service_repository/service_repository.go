@@ -3,7 +3,7 @@ package service_repository
 import (
 	"miniapp/internal/infrastructure/database/storage"
 	"miniapp/internal/service"
-	"miniapp/internal/service/customer/customer_repository"
+	"miniapp/internal/service/customer_repository"
 )
 
 type Service_repo struct {

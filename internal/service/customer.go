@@ -6,7 +6,7 @@ import (
 	"miniapp/internal/dto"
 	"miniapp/internal/infrastructure/database/storage"
 	"miniapp/internal/mappers"
-	"miniapp/internal/service/customer/customer_repository"
+	"miniapp/internal/service/customer_repository"
 )
 
 type Customer struct {
