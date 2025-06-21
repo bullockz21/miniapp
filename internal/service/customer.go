@@ -19,18 +19,18 @@ func NewCustomerService(r storage.Storage) customer_repository.Customer {
 	}
 }
 
-func (c *Customer) Create(webCustomer dto.WebCreateCustomerDTO) (id int, err error) {
+func (c *Customer) Create(ctx context.Context, webCustomer dto.WebCreateCustomerDTO) (id int, err error) {
 	customer := mappers.FromWebCreateCustomerToCustomer(webCustomer)
 	DBcustomer := mappers.FromCustomerToDBCreateCustomer(customer)
-	id, err = c.Repository.CreateNewCustomer(context.Background(), DBcustomer)
+	id, err = c.Repository.CreateNewCustomer(ctx, DBcustomer)
 	if err != nil {
 		return id, err
 	}
 	return id, nil
 }
 
-func (c *Customer) Load(id int) (webCustomer dto.WebLoadCustomerDTO, err error) {
-	DBCustomer, err := c.Repository.LoadCustomer(context.Background(), id)
+func (c *Customer) Load(ctx context.Context, id int) (webCustomer dto.WebLoadCustomerDTO, err error) {
+	DBCustomer, err := c.Repository.LoadCustomer(ctx, id)
 	if err != nil {
 		return webCustomer, err
 	}
@@ -39,8 +39,8 @@ func (c *Customer) Load(id int) (webCustomer dto.WebLoadCustomerDTO, err error) 
 	return webCustomer, nil
 }
 
-func (c *Customer) LoadList() (webCustomers []dto.WebLoadCustomerDTO, err error) {
-	DBcustomers, err := c.Repository.LoadCustomerList(context.Background())
+func (c *Customer) LoadList(ctx context.Context) (webCustomers []dto.WebLoadCustomerDTO, err error) {
+	DBcustomers, err := c.Repository.LoadCustomerList(ctx)
 	if err != nil {
 		return webCustomers, err
 	}
@@ -57,10 +57,10 @@ func (c *Customer) LoadList() (webCustomers []dto.WebLoadCustomerDTO, err error)
 	return webCustomers, nil
 }
 
-func (c *Customer) Update(wc dto.WebUpdateCustomerDTO) (id int, err error) {
+func (c *Customer) Update(ctx context.Context, wc dto.WebUpdateCustomerDTO) (id int, err error) {
 	customer := mappers.FromWebUpdateCustomerToCustomer(wc)
 	DBCustomer := mappers.FromCustomerToDBUpdateCustomer(customer)
-	id, err = c.Repository.UpdateCustomer(context.Background(), DBCustomer)
+	id, err = c.Repository.UpdateCustomer(ctx, DBCustomer)
 	if err != nil {
 		return id, err
 	}

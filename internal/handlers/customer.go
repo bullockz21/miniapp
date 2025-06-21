@@ -20,6 +20,7 @@ import (
 //	@Failure		401	{object}	handlers.Error
 //	@Router			/customer/{id} [get]
 func (h *Handler) GetCustomerById(c *gin.Context) {
+	ctx := c.Request.Context()
 
 	idStr := c.Params.ByName("id")
 	id := 0
@@ -29,7 +30,7 @@ func (h *Handler) GetCustomerById(c *gin.Context) {
 		SendError(c, http.StatusNotFound, Result{data: "incorrect id", err: err})
 		return
 	}
-	customer, err := h.customer.Load(id)
+	customer, err := h.customer.Load(ctx, id)
 	if err != nil {
 		SendError(c, http.StatusNotFound, Result{data: "FAIL: error get customer", err: err})
 		return
@@ -49,8 +50,9 @@ func (h *Handler) GetCustomerById(c *gin.Context) {
 //	@Failure		401	{object}	handlers.Error
 //	@Router			/customer [get]
 func (h *Handler) GetCustomerList(c *gin.Context) {
+	ctx := c.Request.Context()
 
-	customers, err := h.customer.LoadList()
+	customers, err := h.customer.LoadList(ctx)
 	if err != nil {
 		SendError(c, http.StatusNotFound, Result{data: "FAIL: error get customer list", err: err})
 		return
@@ -72,13 +74,14 @@ func (h *Handler) GetCustomerList(c *gin.Context) {
 //	@Failure		401		{object}	handlers.Error
 //	@Router			/customer [post]
 func (h *Handler) CreateCustomer(c *gin.Context) {
+	ctx := c.Request.Context()
 	newCustomer := dto.WebCreateCustomerDTO{}
 	err := c.ShouldBindJSON(&newCustomer)
 	if err != nil {
 		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	id, err := h.customer.Create(newCustomer)
+	id, err := h.customer.Create(ctx, newCustomer)
 	if err != nil {
 		SendError(c, http.StatusBadRequest, Result{data: "FAIL: error create customer", err: err})
 		return
@@ -99,6 +102,7 @@ func (h *Handler) CreateCustomer(c *gin.Context) {
 //	@Failure		401		{object}	handlers.Error
 //	@Router			/customer/ [patch]
 func (h *Handler) UpdateCustomer(c *gin.Context) {
+	ctx := c.Request.Context()
 
 	UpdateCustomer := dto.WebUpdateCustomerDTO{}
 	err := c.ShouldBindJSON(&UpdateCustomer)
@@ -106,7 +110,7 @@ func (h *Handler) UpdateCustomer(c *gin.Context) {
 		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
 		return
 	}
-	outId, err := h.customer.Update(UpdateCustomer)
+	outId, err := h.customer.Update(ctx, UpdateCustomer)
 	if err != nil {
 		SendError(c, http.StatusNotFound, Result{data: "FAIL: error update customer", err: err})
 		return

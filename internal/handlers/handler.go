@@ -15,6 +15,7 @@ import (
 type Handler struct {
 	logger   *logger.Logger
 	customer customer_repository.Customer
+	sem      chan struct{}
 }
 
 func NewHandler(logger *logger.Logger, service service_repository.Service_repo) handler_repository.Handler {
@@ -26,15 +27,19 @@ func NewHandler(logger *logger.Logger, service service_repository.Service_repo) 
 
 func (h *Handler) Register(r *gin.Engine) {
 	r.Use(gin.Logger())
+	main := r.Group("/")
+	{
+		main.GET("/customer/:id", h.GetCustomerById)
+		main.GET("/customer", h.GetCustomerList)
+		main.POST("/customer", h.CreateCustomer)
+		main.PATCH("/customer", h.UpdateCustomer)
+	}
+	main.Use(h.TimeoutAndSemoporeMiddleware())
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler)) // swagger handler
 
 	r.GET("/hello", h.Hello)
 
-	r.GET("/customer/:id", h.GetCustomerById)
-	r.GET("/customer", h.GetCustomerList)
-	r.POST("/customer", h.CreateCustomer)
-	r.PATCH("/customer", h.UpdateCustomer)
 }
 
 func (h *Handler) Hello(c *gin.Context) {
