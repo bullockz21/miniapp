@@ -8,7 +8,7 @@ SWAG := github.com/swaggo/swag/cmd/swag
 GIN_SWAG := github.com/swaggo/gin-swagger github.com/swaggo/files
 
 GOOSE = github.com/pressly/goose
-EXEC :=  build/miniapp
+EXEC :=  miniapp
 SRC := cmd/app/main.go
 
 all: clean build run
@@ -20,7 +20,6 @@ get:
 	go get -u $(GIN) $(JWT) $(LOGRUS) $(CLEANENV) $(POSTGRESQL) $(ENV) $(SWAG) $(GIN_SWAG)
 
 build:
-	mkdir -p build
 	go build -o $(EXEC) $(SRC)
 
 run:
@@ -30,9 +29,6 @@ swag:
 	swag fmt
 	swag init -g main.go -d cmd/app,internal/handlers/,internal/dto
 
-goose_set_path:
-	export PATH=$(PATH):home/$(USER)/go/bin/
-
 goose_up:
 	# goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@postgres:5432/postgres?sslmode=disable" up
 	fish -c 'goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@0.0.0.0:5432/postgres?sslmode=disable" up'
@@ -40,10 +36,19 @@ goose_up:
 goose_down:
 	goose -dir migrations postgres "postgresql://postgres:$(PSQLPASS)@0.0.0.0:5432/postgres?sslmode=disable" down
 
-.PHONY: all init get build goose_set_path goose_up goose_down
+docker-compose-up-silent: docker-compose-stop
+	sudo docker compose -f docker-compose.yml up -d
 
-test:
-	echo "oops"
+docker-compose-stop:
+	sudo docker compose -f docker-compose.yml stop
+
+docker-compose-up: docker-compose-down
+	sudo docker compose -f docker-compose.yml up
+
+docker-compose-down:
+	sudo docker compose -f docker-compose.yml down
+
+.PHONY: all init get build goose_set_path goose_up goose_down
 
 clean:
 	rm -rf $(EXEC)

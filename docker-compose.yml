@@ -1,0 +1,40 @@
+---
+
+services:
+  mini_app:
+    container_name: mini-app
+    environment:
+      BIND_IP: "0.0.0.0"
+      LISTEN_PORT: "8080"
+      PSQL_HOST: "psql-miniapp"
+      PSQL_PORT: "5432"
+      PSQL_NAME: ${POSTGRESQL_DATABASE}
+      PSQL_USER: ${POSTGRESQL_USERNAME}
+      PSQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    build:
+      context: ./
+      dockerfile: ./build/dockerfile
+    depends_on:
+      psql_miniapp:
+        condition: service_healthy
+    command: goose -dir migrations postgres "postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@psql-miniapp:5432/${POSTGRESQL_DATABASE}?sslmode=disable" up
+    ports: 
+      - "8181:8080"
+
+  psql_miniapp:
+    image: postgres:16-alpine
+    container_name: psql-miniapp
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "25432:5432"
