@@ -23,7 +23,7 @@ build:
 	go build -o $(EXEC) $(SRC)
 
 run:
-	$(EXEC)
+	./$(EXEC)
 
 swag:
 	swag fmt

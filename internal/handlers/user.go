@@ -1,5 +1,12 @@
 package handlers
 
+import (
+	"miniapp/internal/dto"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
 // import (
 // 	"miniapp/internal/domain/user"
 // 	"miniapp/internal/dto"
@@ -39,29 +46,35 @@ package handlers
 // 	SendSuccess(c, http.StatusOK, Result{data: user, err: nil})
 // }
 
-// func (h *Handler) CreateUser(c *gin.Context) {
-// 	ctx := c.Request.Context()
-// 	newUser := dto.UserDTO{}
-// 	err := c.ShouldBindJSON(&newUser)
-// 	if err != nil {
-// 		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
-// 		return
-// 	}
-// 	newUser.PasswordHash, err = user.CreatePasswordHash(newUser.Password)
-// 	newUser.Password = ""
-// 	if err != nil {
-// 		SendError(c, http.StatusBadRequest, Result{data: "invalid hash", err: err})
-// 		return
-// 	}
+// CreateCustomer godoc
+//
+//	@Summary		Create user
+//	@Description	Create user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			account	body		dto.WebCreateUserDTO	true	"User create data"
+//	@Success		200		{object}	handlers.Success
+//	@Failure		400		{object}	handlers.Error
+//	@Failure		401		{object}	handlers.Error
+//	@Router			/user [post]
+func (h *Handler) CreateUser(c *gin.Context) {
+	ctx := c.Request.Context()
+	newUser := dto.WebCreateUserDTO{}
+	err := c.ShouldBindJSON(&newUser)
+	if err != nil {
+		SendError(c, http.StatusBadRequest, Result{data: "invalid request body", err: err})
+		return
+	}
 
-// 	id, err := h.storage.SaveNewUser(ctx, newUser)
+	id, err := h.user.Create(ctx, newUser)
 
-// 	if err != nil {
-// 		SendError(c, http.StatusBadRequest, Result{data: "FAIL: error create user", err: err})
-// 		return
-// 	}
-// 	SendSuccess(c, http.StatusOK, Result{data: id, err: nil})
-// }
+	if err != nil {
+		SendError(c, http.StatusBadRequest, Result{data: "FAIL: error create user", err: err})
+		return
+	}
+	SendSuccess(c, http.StatusOK, Result{data: id, err: nil})
+}
 
 // func (h *Handler) UpdateUserPasswordById(c *gin.Context) {
 // 	ctx := c.Request.Context()

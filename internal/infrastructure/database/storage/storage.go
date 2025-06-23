@@ -11,7 +11,7 @@ type Storage interface {
 	LoadCustomerList(ctx context.Context) ([]dto.DBLoadCustomerDTO, error)
 	UpdateCustomer(ctx context.Context, customer dto.DBUpdateCustomerDTO) (id int, err error)
 
-	// SaveNewUser(ctx context.Context, newUser dto.UserDTO) (id int, err error)
+	CreateNewUser(ctx context.Context, DBuser dto.DBCreateUserDTO) (id int, err error)
 	// LoadUser(ctx context.Context, id int) (user dto.UserDTO, err error)
 	// LoadAllUsers(ctx context.Context) (users []dto.UserDTO, err error)
 	// UpdateUserPassword(ctx context.Context, user dto.UserDTO) (id int, err error)

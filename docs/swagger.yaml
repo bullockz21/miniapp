@@ -13,6 +13,15 @@ definitions:
       customer_telegram_id:
         type: integer
     type: object
+  dto.WebCreateUserDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      user_name:
+        type: string
+    type: object
   dto.WebLoadCustomerDTO:
     properties:
       customer_created_at:
@@ -198,4 +207,34 @@ paths:
       summary: Get Customer
       tags:
       - customer
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      parameters:
+      - description: User create data
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.WebCreateUserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Success'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Create user
+      tags:
+      - user
 swagger: "2.0"

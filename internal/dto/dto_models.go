@@ -2,17 +2,6 @@ package dto
 
 import "time"
 
-type UserDTO struct {
-	Id           int       `json:"id"`
-	UserName     string    `json:"user_name"`
-	RoleId       int       `json:"role_id"`
-	Password     string    `json:"password"`
-	PasswordHash string    `json:"password_hash"`
-	Email        string    `json:"email"`
-	CreatedAt    time.Time `json:"created_at"`
-	DeletedAt    time.Time `json:"deleted_at"`
-}
-
 // id SERIAL PRIMARY KEY,
 // type_id INT NOT NULL,
 // name VARCHAR(50) UNIQUE NOT NULL,

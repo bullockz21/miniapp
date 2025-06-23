@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"miniapp/internal/dto"
 	"miniapp/internal/handlers/handler_repository"
-	"miniapp/internal/service"
 	"miniapp/internal/service/customer_repository"
 	"miniapp/internal/service/service_repository"
+	"miniapp/internal/service/user_repository"
 	"miniapp/pkg/logger"
 	"net/http"
 
@@ -18,7 +18,7 @@ import (
 type Handler struct {
 	logger   *logger.Logger
 	customer customer_repository.Customer
-	user     service.User
+	user     user_repository.User
 	sem      chan struct{}
 }
 
@@ -26,6 +26,7 @@ func NewHandler(logger *logger.Logger, service service_repository.Service_repo) 
 	return &Handler{
 		logger:   logger,
 		customer: service.CustomerRepo,
+		user:     service.UserRepo,
 	}
 }
 
@@ -39,6 +40,8 @@ func (h *Handler) Register(r *gin.Engine) {
 		main.GET("/customer", h.GetCustomerList)
 		main.POST("/customer", h.CreateCustomer)
 		main.PATCH("/customer", h.UpdateCustomer)
+
+		main.POST("/user", h.CreateUser)
 	}
 	r.Use(gin.Logger())
 	main.Use(h.TimeoutAndSemoporeMiddleware())
