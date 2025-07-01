@@ -1,0 +1,228 @@
+@media (max-width: 768px) {
+    .product-card {
+       width: 100vw; /* Полная ширина области просмотра */
+        margin: 0; /* Убеждаемся, что нет боковых отступов */
+        padding: 8px; /* Уменьшаем внутренние отступы для экономии места */
+        border-radius: 0; /* Можно убрать скругление на мобильных для полноты */
+    }
+
+    .product-header {
+        gap: 6px; /* Меньший gap для экономии места */
+    }
+
+    .product-rectangle {
+        flex: 1 1 calc(33.33% - 6px); /* 3 элемента в ряд до 768px */
+        min-width: 70px;
+    }
+
+    .product-rectangle18 {
+        flex: 1 1 calc(70% - 6px);
+        min-width: 180px;
+    }
+
+    .product-rectangle19 {
+        flex: 1 1 calc(10% - 6px);
+        min-width: 40px;
+        max-width: 85px;
+    }
+    .product-rectangle3,
+    .product-rectangle5,
+    .order-button {
+        width: 100%; /* Полная ширина */
+    }
+    .listFoodElement {
+        gap: 8px; /* Чуть больше места на мобильных */
+    }
+
+    .listFoodElement li {
+        min-width: 45px; /* Уменьшаем минимальную ширину */
+        max-width: 100px; /* Адаптируем максимальную ширину */
+    }
+
+    .product-info {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 140px;
+    }
+
+    .product-rectangle:hover .pro-rect-title,
+    .product-rectangle:active .pro-rect-title {
+        background-color: transparent;
+        color: inherit;
+        width: auto;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-header {
+        padding-top: 10%;
+    }
+
+    .product-rectangle {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 60px;
+    }
+
+    .product-rectangle i.bi {
+        font-size: 3rem;
+    }
+    .pro-rect-title {
+        font-size: 13px;
+    }
+
+    .product-address-arrow {
+        padding-top: 10%;
+    }
+
+    .product-rectangle18 {
+        flex: 1 1 calc(65% - 4px);
+        min-width: 160px;
+        min-height: 72px;
+    }
+
+    .cityaddress, .deliverytime {
+        font-size: 18px;
+    }
+
+    .product-rectangle19 {
+        flex: 1 1 calc(3% - 4px);
+        min-width: 30px;
+        max-width: 55px;
+        min-height: 72px;
+    }
+
+    .arrow19 {
+        font-size: clamp(30px, 5vw, 36px); /* Адаптивный размер иконки */
+    }
+
+    .product-rectangle3 {
+        margin-top: 12%;
+        min-height: 72px;
+    }
+
+    .search-icon {
+        font-size: clamp(30px, 5vw, 36px);
+    }
+
+    .search-input {
+        font-size: 18px;
+    }
+    
+    .product-rectangle5 {
+        min-height: 72px;
+    }
+
+    .listFoodElement {
+        /* gap: 10px;  */
+        font-size: 18px;
+    }
+
+    .listFoodElement li {
+        min-width: 40px; /* Ещё компактнее */
+        max-width: 80px; /* Ограничиваем растяжение */
+    }
+
+    .product-info {
+        flex: 1 1 100%; /* По одному элементу в ряд */
+        min-width: 120px;
+    }
+
+    .product-title, .product-description, .product-controls button, .product-price {
+        font-size: 18px;
+    }
+
+    .product-info {
+        min-height: 262px;
+    }
+
+    .product-picture {
+        min-height: 204px;
+    }
+  
+    .order-button {
+        min-height: 72px;
+        max-width: 410px;
+        margin-top: 18%;
+    }
+}
+
+@media (max-width: 375px) {
+    .product-header {
+        gap: 4px;
+    }
+
+    .product-rectangle i.bi {
+        font-size: 2rem;
+    }
+
+    .pro-rect-title {
+        font-size: 9px;
+    }
+
+    .product-address-arrow {
+        padding-top: 0;
+    }
+
+    .product-rectangle18 {
+        min-height: 56px;
+    }
+
+    .cityaddress, .deliverytime, .search-input {
+        font-size: 15px;
+    }
+
+    .listFoodElement {
+        gap: 4px;
+    }
+
+    .listFoodElement li {
+        min-width: 30px; /* Максимальная компактность */
+        max-width: 60px;
+    }
+
+    .product-info {
+        min-width: 100px;
+    }
+
+    .product-rectangle19 {
+        flex: 1 1 calc(.1% - 4px);
+        min-height: 56px;
+        /* width: 45px; */
+        min-width: 45px; /* Гарантируем минимальную ширину */
+        max-width: 45px;
+    }
+    .arrow19, .search-icon {
+        font-size: 24px; /* Немного уменьшаем иконку на узких экранах */
+        width: 24px;
+        height: 24px;
+    }
+
+    .product-rectangle3 {
+        min-height: 44px;
+        margin-top: 5%;
+    }
+
+    .product-rectangle5 {
+        min-height: 44px;
+    }
+
+    .listFoodElement, .product-title, .product-description {
+        font-size: 15px;
+    }
+
+    .product-info {
+        /* flex: 1 1 calc(45% - 4px); */
+        min-height: 204px;
+        margin-top: 6%;
+    }
+
+    .product-picture {
+        min-height: 152px;
+    }
+
+    .order-button {
+        /* flex: 1 1 calc(65% - 4px); */
+        min-height: 56px;
+        max-width: 345px;
+    }
+}
