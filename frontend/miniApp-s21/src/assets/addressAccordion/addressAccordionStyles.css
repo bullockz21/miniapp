@@ -1,65 +1,61 @@
-.orders-list {
+.addresses-list {
   width: 100%;
   list-style-type: none;
   margin: 16px 0;
   padding: 16px;
-
   border-radius: 9px;
 }
 
-.order-item {
-  background-color: #e8e8e8;
+.address-item {
   border-radius: 9px;
   margin-bottom: 8px;
+  background-color: #e8e8e8;
   padding: 12px;
 }
 
-.order-header {
+.address-header {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 15px;
   margin-bottom: 8px;
 }
 
-.order-details {
+.address-details {
   padding: 8px 0;
 }
 
-.order-items {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 8px 0; 
+.address-info {
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #666;
 }
 
-.order-items li {
-  margin-bottom: 4px;
+.address-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.order-footer {
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-}
-
-.order-total {
+.address-notes {
   font-weight: 400;
-  margin: 0; 
-  flex-shrink: 0; 
+  margin: 0;
+  flex-shrink: 0;
 }
 
-.repeat-order-btn {
-  background-color: #fece00;
+.select-address-btn {
+  background-color: #ffca28;
   color: #333;
   border: none;
   padding: 8px 16px;
   border-radius: 9px;
   cursor: pointer;
   font-size: 14px;
-  width: auto; 
+  width: auto;
   font-family: 'Inter', sans-serif;
   flex-shrink: 0;
 }
 
-.repeat-order-btn:hover {
-  background-color: #fece00;
+.select-address-btn:hover {
+  background-color: #ffb300;
 }

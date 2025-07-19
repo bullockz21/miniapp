@@ -1,6 +1,6 @@
 html, body {
   font-family: 'Inter', sans-serif;
-  background-color: #f0f0f0;
+  background-color: #fff;
   margin: 0;
   padding: 0;
   /* width: 100%;
@@ -10,7 +10,6 @@ html, body {
   /* align-items: center; */
   overflow-x: hidden;
   color: black;
-  background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
 }
 
 /* .App {

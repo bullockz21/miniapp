@@ -50,6 +50,10 @@
         color: inherit;
         width: auto;
         height: auto;
+       
+    }
+    .pro-rect-title {
+        font-size: clamp(.5rem, 0.313rem + 1.25vw, 2.4rem);
     }
 }
 
@@ -66,9 +70,9 @@
     .product-rectangle i.bi {
         font-size: 3rem;
     }
-    .pro-rect-title {
-        font-size: 13px;
-    }
+    /* .pro-rect-title {
+        font-size: clamp(1rem, 0.313rem + 1.25vw, 1.8rem);
+    } */
 
     .product-address-arrow {
         padding-top: 10%;
@@ -141,7 +145,7 @@
   
     .order-button {
         min-height: 72px;
-        max-width: 410px;
+        /* max-width: 410px; */
         margin-top: 18%;
     }
 }
@@ -156,7 +160,7 @@
     }
 
     .pro-rect-title {
-        font-size: 9px;
+        font-size: clamp(0.563rem, 0.313rem + 1.25vw, 1rem);
     }
 
     .product-address-arrow {
@@ -224,5 +228,6 @@
         /* flex: 1 1 calc(65% - 4px); */
         min-height: 56px;
         max-width: 345px;
+        width: clamp(21.563rem, 14.176rem + 36.93vw, 41.875rem);
     }
 }

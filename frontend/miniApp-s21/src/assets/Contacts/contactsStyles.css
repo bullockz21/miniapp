@@ -1,0 +1,36 @@
+.container-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+}
+
+.contact-item button{
+    width: clamp(20.5rem, 10.5rem + 50vw, 48rem);
+    min-width: 328px;
+    height: 32px;
+    background: #FECE00;
+    font-family: 'Inter', sans-serif;
+    border-radius: 9px;
+    font-weight: 400;
+    border: none;
+    gap: 4px;
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
+    text-align: start;
+}
+
+@media (min-width: 768px) {
+    .contact-item button {
+        height: clamp(3rem, 1.273rem + 3.64vw, 5rem);
+        font-size: clamp(1.4rem, 0.597rem + 1.7vw, 2.1rem);
+    }
+}
+
+@media (min-width: 350px) {
+    .contact-item button {
+        height: clamp(2rem, 1.273rem + 3.64vw, 4rem);
+        font-size: clamp(0.938rem, 0.597rem + 1.7vw, 1.875rem);
+    }
+}
